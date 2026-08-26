@@ -672,18 +672,38 @@ a { color: inherit; }
   </div>
 </div>
 
-<script src="data/events-data.js"></script>
 <script>
 /* =====================================================================
-   RENDEZ-VOUS CITOYENS — LOGIQUE DE LA PAGE
-   RDV_THEMES / RDV_STATS et le texte XML brut (RDV_XML) viennent du
-   fichier data/events-data.js, chargé AVANT ce script dans index.html.
-   RDV_XML est interprété ici même, au chargement, avec le parseur XML
-   natif du navigateur (DOMParser) — voir parseEvenementsXML().
+   RENDEZ-VOUS CITOYENS — LOGIQUE DE LA PAGE (COMPOSANT COLI N°1)
+   RDV_THEMES / RDV_STATS sont définis ici même (juste en dessous).
+   Les données événements NE SONT PAS dans ce fichier : elles doivent
+   se trouver dans un second composant COLI sur la même page AEM,
+   contenant exactement le fichier coli-2-donnees.html (voir ce fichier
+   pour les instructions de mise à jour via editeur.html).
    ===================================================================== */
 
 (function () {
   "use strict";
+
+  const RDV_THEMES = [
+    { id: "secourisme",         label: "Les gestes qui sauvent",      icone: "🚑", couleur: "#C81620", image: "images/secourisme.svg" },
+    { id: "secourisme2",        label: "Les gestes qui sauvent",      icone: "🚑", couleur: "#C81620", image: "images/secourisme.svg" },
+    { id: "cybersecurite",      label: "Cybersécurité",                icone: "🔒", couleur: "#005F60", image: "images/cybersecurite.svg" },
+    { id: "cambriolage",        label: "Prévention des cambriolages",  icone: "🛡️", couleur: "#004D4E", image: "images/cambriolage.svg" },
+    { id: "cambriolage2",       label: "Prévention des cambriolages",  icone: "🛡️", couleur: "#004D4E", image: "images/cambriolage.svg" },
+    { id: "informatique",       label: "Informatique",                 icone: "💻", couleur: "#007173", image: "images/informatique.svg" },
+    { id: "informatique2",      label: "Informatique",                 icone: "💻", couleur: "#007173", image: "images/informatique.svg" },
+    { id: "succession",         label: "Transmission du patrimoine",   icone: "📜", couleur: "#00291C", image: "images/succession.svg" },
+    { id: "agriculture",        label: "Agriculture",                  icone: "🌾", couleur: "#1F6E4A", image: "images/agriculture.svg" },
+    { id: "sante-viellir",      label: "Bien vieillir & santé",        icone: "💚", couleur: "#A1273A", image: "images/sante-viellir.svg" },
+    { id: "securite-montagne",  label: "Sécurité en montagne",         icone: "⛰️", couleur: "#164A36", image: "images/securite-montagne.svg" },
+    { id: "securite-routiere",  label: "Sécurité routière",            icone: "🚦", couleur: "#C81620", image: "images/securite-routiere.svg" },
+    { id: "default",            label: "Autre thème",                  icone: "⭐", couleur: "#003D2B", image: "images/autre.svg" }
+  ];
+
+  // Laisser vide : les chiffres clés sont calculés automatiquement à partir
+  // des événements réels (voir renderStats() plus bas).
+  const RDV_STATS = {};
 
   const PAST_PAGE_SIZE = 5;
   let pastPage = 0;
@@ -972,24 +992,18 @@ a { color: inherit; }
   }
 
   /* ---------------------------------------------------------------
-     Récupération du XML métier — compatible deux modes :
-     1) usage local/desktop : variable globale RDV_XML fournie par
-        data/events-data.js (chargé juste avant ce script) ;
-     2) intégration AEM : le XML est collé tel quel dans un second
-        composant COLI, dans une balise <script type="application/xml"
-        id="rdv-citoyens-xml-data">, sur la même page. On va le
-        chercher dans le DOM si la variable globale n'existe pas.
+     Récupération du XML métier : ce fichier (composant COLI n°1) NE
+     CONTIENT PAS les données événements. Elles doivent se trouver
+     ailleurs sur la MÊME page AEM, dans un second composant COLI dont
+     le contenu est exactement celui du fichier coli-2-donnees.html
+     (une balise portant l'identifiant rdv-citoyens-xml-data). On va
+     la chercher dans le DOM de la page au chargement, peu importe
+     l'ordre des composants.
   --------------------------------------------------------------- */
   function resolveRdvXml() {
-    // Référence par identifiant nu (pas window.RDV_XML) : une "const" de
-    // premier niveau dans un <script> classique n'est jamais posée sur
-    // window, mais reste lisible ainsi depuis un <script> suivant.
-    if (typeof RDV_XML === "string" && RDV_XML.trim()) {
-      return RDV_XML;
-    }
     const el = document.getElementById("rdv-citoyens-xml-data");
     if (el && el.textContent.trim()) return el.textContent;
-    console.error("Rendez-vous Citoyens : aucune donnée XML trouvée (ni RDV_XML, ni #rdv-citoyens-xml-data).");
+    console.error("Rendez-vous Citoyens : aucune donnée XML trouvée (#rdv-citoyens-xml-data manquant).");
     return "<Evenements></Evenements>";
   }
 
@@ -1014,7 +1028,7 @@ a { color: inherit; }
 
   document.addEventListener("DOMContentLoaded", init);
 })();
-
 </script>
+
 </body>
 </html>

@@ -1,28 +1,17 @@
-/* =====================================================================
-   RENDEZ-VOUS CITOYENS — DONNÉES
-   ---------------------------------------------------------------------
-   RDV_XML contient EXACTEMENT le contenu du fichier data/RDVCitoyens.xml
-   (le format officiel utilisé par le Crédit Agricole Toulouse 31 pour ses
-   événements). Ce fichier .js n'est qu'un "emballage" : un navigateur
-   ouvert en local (double-clic, sans serveur) refuse de charger un .xml
-   externe par sécurité (CORS), mais charge sans problème un .js. Le
-   contenu XML est donc recopié ici tel quel, puis interprété par
-   parseEvenementsXML() au chargement de la page avec le parseur XML
-   natif du navigateur (DOMParser).
+<!-- =====================================================================
+     RENDEZ-VOUS CITOYENS — COMPOSANT COLI N°2 (données événements)
+     À coller intégralement dans le second composant COLI de la page
+     AEM (n'importe où sur la même page que coli-1-page.html).
+     Ce fichier ne s'affiche jamais : c'est un conteneur de données que
+     le script du composant n°1 lit au chargement de la page.
 
-   -> Pour modifier les événements : utilisez l'éditeur (editeur.html),
-      qui importe/exporte directement de vrais fichiers .xml, puis
-      régénère ce fichier automatiquement. Ne modifiez ce fichier à la
-      main qu'en cas de besoin, en gardant la structure XML strictement
-      identique à RDVCitoyens.xml. Le nom RDVCitoyens.xml ne doit
-      jamais être changé.
-
-   RDV_THEMES et RDV_STATS : métadonnées propres au SITE (couleurs,
-   icônes, images) et statistiques ; ce sont des ajouts d'affichage,
-   absents du XML métier d'origine.
-   ===================================================================== */
-
-const RDV_XML = `<!--
+     MISE À JOUR (par le service vie mutuelle) : ouvrez editeur.html,
+     modifiez/ajoutez/supprimez un événement, cliquez sur
+     « Copier le bloc de données », puis remplacez tout le contenu du
+     composant COLI n°2 dans AEM par ce qui vient d'être copié.
+     ===================================================================== -->
+<script type="application/xml" id="rdv-citoyens-xml-data">
+<!--
 Voici les themes possible : 
 agriculture, 
 secourisme, 
@@ -700,32 +689,5 @@ secourisme2
 	</Evenement>
 
 
-</Evenements>`;
-
-// Thématiques officielles (voir le commentaire en tête du fichier XML) + un
-// thème "défaut" utilisé quand l'événement n'a pas de thématique reconnue.
-// id      -> doit correspondre à la valeur du tag <Theme> dans le XML
-// label   -> libellé affiché
-// icone   -> emoji utilisé en tout dernier recours
-// couleur -> couleur d'accent (fond derrière l'icône), palette Crédit Agricole
-// image   -> image PAR DÉFAUT de la thématique, "remonte" automatiquement sur
-//            chaque événement de ce thème (sauf override futur via <Image>)
-const RDV_THEMES = [
-  { id: "secourisme",         label: "Les gestes qui sauvent",      icone: "🚑", couleur: "#C81620", image: "images/secourisme.svg" },
-  { id: "secourisme2",        label: "Les gestes qui sauvent",      icone: "🚑", couleur: "#C81620", image: "images/secourisme.svg" },
-  { id: "cybersecurite",      label: "Cybersécurité",                icone: "🔒", couleur: "#005F60", image: "images/cybersecurite.svg" },
-  { id: "cambriolage",        label: "Prévention des cambriolages",  icone: "🛡️", couleur: "#004D4E", image: "images/cambriolage.svg" },
-  { id: "cambriolage2",       label: "Prévention des cambriolages",  icone: "🛡️", couleur: "#004D4E", image: "images/cambriolage.svg" },
-  { id: "informatique",       label: "Informatique",                 icone: "💻", couleur: "#007173", image: "images/informatique.svg" },
-  { id: "informatique2",      label: "Informatique",                 icone: "💻", couleur: "#007173", image: "images/informatique.svg" },
-  { id: "succession",         label: "Transmission du patrimoine",   icone: "📜", couleur: "#00291C", image: "images/succession.svg" },
-  { id: "agriculture",        label: "Agriculture",                  icone: "🌾", couleur: "#1F6E4A", image: "images/agriculture.svg" },
-  { id: "sante-viellir",      label: "Bien vieillir & santé",        icone: "💚", couleur: "#A1273A", image: "images/sante-viellir.svg" },
-  { id: "securite-montagne",  label: "Sécurité en montagne",         icone: "⛰️", couleur: "#164A36", image: "images/securite-montagne.svg" },
-  { id: "securite-routiere",  label: "Sécurité routière",            icone: "🚦", couleur: "#C81620", image: "images/securite-routiere.svg" },
-  { id: "default",            label: "Autre thème",                  icone: "⭐", couleur: "#003D2B", image: "images/autre.svg" }
-];
-
-// Laisser vide : les chiffres clés sont calculés automatiquement à partir
-// des événements réels (voir renderStats() plus bas dans le script).
-const RDV_STATS = {};
+</Evenements>
+</script>

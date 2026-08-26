@@ -4,7 +4,157 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Éditeur — Rendez-vous Citoyens</title>
-<link rel="stylesheet" href="css/editeur.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+:root {
+  --navy: #16234f;
+  --navy-dark: #0d1836;
+  --blue-accent: #2f4d9c;
+  --blue-pill: #5b6fb0;
+  --blue-box: #e7ebf8;
+  --rust: #a0522d;
+  --green-ca: #1e7145;
+  --red-ca: #d0342c;
+  --grey-text: #5b6472;
+  --bg: #f2f4f9;
+  --card-bg: #ffffff;
+  --border: #e0e3ee;
+  --danger: #c0392b;
+  --ok: #1e8449;
+  --radius: 12px;
+  --shadow: 0 6px 20px rgba(22,35,79,0.08);
+  --grad-btn: linear-gradient(120deg, #6d5bff 0%, #8a3ffc 55%, #ff6fa5 100%);
+  --font: 'Poppins', 'Segoe UI', system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+body { margin:0; font-family: var(--font); background: var(--bg); color: var(--navy); }
+.container { max-width: 1240px; margin: 0 auto; padding: 0 24px 60px; }
+
+/* header */
+.site-header { background:#fff; border-bottom:3px solid transparent; border-image: var(--grad-btn) 1; margin-bottom: 28px; }
+.header-inner { display:flex; align-items:center; justify-content:space-between; gap:20px; padding:18px 24px; flex-wrap:wrap; }
+.header-title h1 { margin:0; font-size:1.15rem; color:var(--navy-dark); }
+.header-title p { margin:2px 0 0; font-size:.82rem; color:var(--grey-text); }
+
+/* buttons */
+.btn { display:inline-flex; align-items:center; gap:6px; border:none; cursor:pointer; font-family:var(--font); font-weight:600; font-size:.8rem; padding:10px 18px; border-radius:9px; transition:.15s; text-decoration:none; }
+.btn-primary { background:var(--navy); color:#fff; }
+.btn-primary:hover { background:var(--navy-dark); }
+.btn-outline { background:#fff; color:var(--navy); border:1.5px solid var(--navy); }
+.btn-outline:hover { background:var(--navy); color:#fff; }
+.btn-soft { background:var(--grad-btn); color:#fff; box-shadow:0 8px 20px rgba(124,58,237,.3); }
+.btn-soft:hover { filter:brightness(1.08); }
+.btn-danger { background:#fdecea; color:var(--danger); }
+.btn-danger:hover { background:var(--danger); color:#fff; }
+.btn-small { padding:7px 12px; font-size:.72rem; }
+.btn:disabled { opacity:.4; cursor:not-allowed; }
+
+/* toolbar */
+.toolbar { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:22px; align-items:center; }
+.toolbar .spacer { flex:1; }
+
+/* tabs */
+.tabs { display:flex; gap:6px; margin-bottom:22px; border-bottom:2px solid var(--border); }
+.tab-btn { background:none; border:none; cursor:pointer; font-family:var(--font); font-weight:600; font-size:.85rem; color:var(--grey-text); padding:10px 18px; border-bottom:3px solid transparent; margin-bottom:-2px; }
+.tab-btn.active { color:var(--navy); border-bottom-color:var(--navy); }
+.tab-panel { display:none; }
+.tab-panel.active { display:block; }
+
+/* layout panels */
+.panel { background:var(--card-bg); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); padding:22px; }
+.panel + .panel { margin-top:18px; }
+.panel h2 { margin-top:0; font-size:1.05rem; }
+
+/* event list */
+.event-search { width:100%; padding:10px 14px; border:1.5px solid var(--border); border-radius:9px; margin-bottom:14px; font-family:var(--font); font-size:.88rem; }
+.event-row { display:flex; align-items:center; gap:14px; padding:12px 14px; border:1px solid var(--border); border-radius:10px; margin-bottom:10px; background:#fbfcfe; }
+.event-row .badge-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+.event-row .info { flex:1; min-width:0; }
+.event-row .info .t { font-weight:600; font-size:.92rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.event-row .info .m { font-size:.76rem; color:var(--grey-text); }
+.status-pill { font-size:.68rem; font-weight:700; padding:3px 9px; border-radius:999px; text-transform:uppercase; letter-spacing:.4px; }
+.status-a_venir { background:#e5f3ea; color:var(--ok); }
+.status-termine { background:#eceff5; color:var(--grey-text); }
+.event-row .actions { display:flex; gap:6px; flex-shrink:0; }
+
+/* form */
+.form-grid { display:grid; grid-template-columns: repeat(2, 1fr); gap:16px; }
+.form-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.field { display:flex; flex-direction:column; gap:5px; }
+.field.full { grid-column: 1 / -1; }
+.field label { font-size:.78rem; font-weight:600; color:var(--navy-dark); }
+.field .hint { font-size:.7rem; color:var(--grey-text); font-weight:400; }
+.field input, .field select, .field textarea {
+  padding:9px 12px; border:1.5px solid var(--border); border-radius:8px; font-family:var(--font); font-size:.86rem; color:var(--navy);
+  background:#fff;
+}
+.field input:focus, .field select:focus, .field textarea:focus { outline:none; border-color:var(--blue-accent); }
+.field textarea { resize:vertical; min-height:70px; }
+.field.invalid input, .field.invalid select, .field.invalid textarea { border-color:var(--danger); background:#fff7f6; }
+fieldset { border:1px dashed var(--border); border-radius:10px; padding:16px; margin:0 0 18px; }
+fieldset legend { font-size:.82rem; font-weight:700; color:var(--navy); padding:0 6px; }
+details.advanced summary { cursor:pointer; font-weight:600; color:var(--blue-accent); margin-bottom:10px; }
+
+.form-actions { display:flex; justify-content:flex-end; gap:10px; margin-top:20px; }
+
+/* stats tab */
+.stat-row { display:flex; align-items:center; gap:14px; padding:14px 0; border-bottom:1px solid var(--border); }
+.stat-row:last-child { border-bottom:none; }
+.stat-row label { flex:0 0 180px; font-weight:600; font-size:.86rem; }
+.stat-row input[type=number] { width:140px; padding:8px 10px; border:1.5px solid var(--border); border-radius:8px; }
+.stat-row .auto-check { display:flex; align-items:center; gap:6px; font-size:.78rem; color:var(--grey-text); }
+.stat-row .computed { font-size:.78rem; color:var(--grey-text); }
+
+/* themes table */
+table.themes-table { width:100%; border-collapse:collapse; }
+table.themes-table th { text-align:left; font-size:.72rem; text-transform:uppercase; color:var(--grey-text); padding:8px; border-bottom:2px solid var(--border); }
+table.themes-table td { padding:8px; border-bottom:1px solid var(--border); vertical-align:middle; }
+table.themes-table input[type=text] { width:100%; padding:6px 8px; border:1.5px solid var(--border); border-radius:6px; font-family:var(--font); }
+table.themes-table input[type=color] { width:44px; height:32px; border:none; padding:0; background:none; }
+
+/* miniatures d'image (thème / événement) */
+.thumb {
+  width:64px; height:44px; border-radius:6px; overflow:hidden; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; background:#eef0f7; font-size:1.2rem;
+  border:1px solid var(--border);
+}
+.thumb img { width:100%; height:100%; object-fit:cover; }
+.image-cell { display:flex; align-items:center; gap:10px; }
+.image-cell .image-actions { display:flex; flex-direction:column; gap:4px; }
+.image-cell .image-actions button { font-size:.68rem; padding:4px 8px; }
+
+.image-field-preview {
+  display:flex; align-items:center; gap:14px; margin-top:8px; padding:10px 12px;
+  background:#f7f8fc; border:1px dashed var(--border); border-radius:8px;
+}
+.image-field-preview .thumb { width:96px; height:64px; font-size:1.6rem; }
+.image-field-preview .txt { font-size:.76rem; color:var(--grey-text); line-height:1.4; }
+.image-field-preview .txt strong { color:var(--navy-dark); }
+
+/* modal (form popup) */
+.modal-overlay { position:fixed; inset:0; background:rgba(13,24,54,.55); display:none; align-items:flex-start; justify-content:center; padding:40px 16px; overflow-y:auto; z-index:1000; }
+.modal-overlay.open { display:flex; }
+.modal-box { background:#fff; width:100%; max-width:780px; border-radius:16px; box-shadow:0 30px 70px rgba(0,0,0,.35); }
+.modal-box .modal-head { display:flex; justify-content:space-between; align-items:center; padding:18px 24px; border-bottom:1px solid var(--border); }
+.modal-box .modal-head h2 { margin:0; font-size:1.05rem; }
+.modal-box .modal-content { padding:22px 24px; max-height:70vh; overflow-y:auto; }
+
+/* export preview */
+.code-preview { background:#0d1836; color:#cfe0ff; border-radius:10px; padding:16px; font-family: 'SFMono-Regular', Consolas, monospace; font-size:.78rem; max-height:360px; overflow:auto; white-space:pre-wrap; word-break:break-word; }
+
+/* toast */
+#toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--navy-dark); color:#fff; padding:12px 22px; border-radius:999px; font-size:.85rem; font-weight:600; opacity:0; pointer-events:none; transition:.25s; z-index:2000; }
+#toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+.empty-state { text-align:center; color:var(--grey-text); padding:30px 0; font-size:.88rem; }
+.import-banner { background:#fff7e6; border:1px solid #f2d489; color:#7a5b00; padding:12px 16px; border-radius:10px; margin-bottom:18px; display:flex; justify-content:space-between; align-items:center; gap:14px; font-size:.85rem; }
+
+@media (max-width: 700px) {
+  .form-grid, .form-grid.cols-3 { grid-template-columns: 1fr; }
+  .stat-row { flex-wrap:wrap; }
+}
+</style>
 </head>
 <body>
 
@@ -12,9 +162,9 @@
   <div class="header-inner">
     <div class="header-title">
       <h1>Éditeur des Rendez-vous Citoyens</h1>
-      <p>Ajoutez, modifiez ou supprimez des événements, puis exportez le fichier de données.</p>
+      <p>Ajoutez, modifiez ou supprimez des événements, puis copiez le bloc de données à coller dans le composant COLI n°2 sur AEM (fichier coli-2-donnees.html).</p>
     </div>
-    <a href="index.html" class="btn btn-outline btn-small" target="_blank">Voir la page ↗</a>
+    <button class="btn btn-outline btn-small" id="btn-preview">👁️ Prévisualiser la page ↗</button>
   </div>
 </header>
 
@@ -34,9 +184,8 @@
     <input type="file" id="file-import" accept=".xml,text/xml,application/xml" style="display:none">
     <div class="spacer"></div>
     <button class="btn btn-outline" id="btn-copy">Copier le XML</button>
-    <button class="btn btn-soft" id="btn-download">⬇ Télécharger le .xml</button>
-    <button class="btn btn-soft" id="btn-download-js">⬇ Télécharger le .js (pour la page)</button>
-    <button class="btn btn-primary" id="btn-copy-coli2">📋 Copier le bloc AEM (Composant COLI n°2)</button>
+    <button class="btn btn-soft" id="btn-download">⬇ Télécharger RDVCitoyens.xml</button>
+    <button class="btn btn-primary" id="btn-copy-coli2">📋 Copier le bloc de données (page / COLI n°2)</button>
   </div>
 
   <div class="tabs">
@@ -67,7 +216,7 @@
   <div class="tab-panel" id="tab-themes">
     <div class="panel">
       <h2>Thématiques disponibles</h2>
-      <p class="hint" style="color:var(--grey-text);font-size:.85rem;margin-top:-8px">L'image de chaque thématique s'affiche automatiquement sur tout événement de ce thème qui n'a pas sa propre photo.</p>
+      <p class="hint" style="color:var(--grey-text);font-size:.85rem;margin-top:-8px">L'image de chaque thématique s'affiche automatiquement sur tout événement de ce thème qui n'a pas sa propre photo. <strong>Ces thématiques sont recopiées directement dans coli-1-page.html</strong> (composant COLI n°1) : si vous en modifiez une ici, reportez le changement à la main dans le tableau RDV_THEMES du script de coli-1-page.html — cet onglet sert surtout à prévisualiser.</p>
       <table class="themes-table">
         <thead><tr><th>Image</th><th>Identifiant</th><th>Libellé</th><th>Icône</th><th>Couleur</th><th></th></tr></thead>
         <tbody id="themes-body"></tbody>
@@ -80,8 +229,8 @@
   <!-- ONGLET APERÇU / EXPORT -->
   <div class="tab-panel" id="tab-export">
     <div class="panel">
-      <h2>Aperçu du fichier <code>data/RDVCitoyens.xml</code></h2>
-      <p style="color:var(--grey-text);font-size:.85rem;margin-top:-8px">Ce texte se met à jour automatiquement et respecte le format XML d'origine. Copiez-le ou téléchargez les fichiers avec les boutons en haut de page — <strong>téléchargez les deux</strong> (.xml et .js) et remplacez-les dans le dossier <code>data/</code> du site (usage local). <strong>Pour AEM :</strong> utilisez le bouton « 📋 Copier le bloc AEM (Composant COLI n°2) » et collez le résultat tel quel dans le second composant COLI de la page — voir <code>aem/README.md</code>.</p>
+      <h2>Aperçu du fichier <code>RDVCitoyens.xml</code></h2>
+      <p style="color:var(--grey-text);font-size:.85rem;margin-top:-8px">Ce texte se met à jour automatiquement et respecte le format XML d'origine. <strong>Pour mettre à jour le site (AEM)</strong>, utilisez le bouton « 📋 Copier le bloc de données » en haut : il enveloppe ce XML dans la balise attendue, prête à remplacer intégralement le contenu du composant COLI n°2 (fichier <code>coli-2-donnees.html</code>). Les boutons « Copier le XML » / « Télécharger » servent à garder ou partager le fichier <code>RDVCitoyens.xml</code> lui-même, séparément.</p>
       <pre class="code-preview" id="code-preview"></pre>
     </div>
   </div>
@@ -215,7 +364,2423 @@
 
 <div id="toast"></div>
 
-<script src="data/events-data.js"></script>
-<script src="js/editeur.js"></script>
+<!-- =====================================================================
+     Thématiques par défaut (identiques à celles de coli-1-page.html) : servent
+     à préremplir la liste déroulante des thématiques et l'onglet
+     Thématiques. Si vous changez une couleur/icône ici, reportez le
+     changement dans coli-1-page.html pour que la page publique soit à jour.
+     ===================================================================== -->
+<script>
+const RDV_THEMES = [
+  { id: "secourisme",         label: "Les gestes qui sauvent",      icone: "🚑", couleur: "#C81620", image: "images/secourisme.svg" },
+  { id: "secourisme2",        label: "Les gestes qui sauvent",      icone: "🚑", couleur: "#C81620", image: "images/secourisme.svg" },
+  { id: "cybersecurite",      label: "Cybersécurité",                icone: "🔒", couleur: "#005F60", image: "images/cybersecurite.svg" },
+  { id: "cambriolage",        label: "Prévention des cambriolages",  icone: "🛡️", couleur: "#004D4E", image: "images/cambriolage.svg" },
+  { id: "cambriolage2",       label: "Prévention des cambriolages",  icone: "🛡️", couleur: "#004D4E", image: "images/cambriolage.svg" },
+  { id: "informatique",       label: "Informatique",                 icone: "💻", couleur: "#007173", image: "images/informatique.svg" },
+  { id: "informatique2",      label: "Informatique",                 icone: "💻", couleur: "#007173", image: "images/informatique.svg" },
+  { id: "succession",         label: "Transmission du patrimoine",   icone: "📜", couleur: "#00291C", image: "images/succession.svg" },
+  { id: "agriculture",        label: "Agriculture",                  icone: "🌾", couleur: "#1F6E4A", image: "images/agriculture.svg" },
+  { id: "sante-viellir",      label: "Bien vieillir & santé",        icone: "💚", couleur: "#A1273A", image: "images/sante-viellir.svg" },
+  { id: "securite-montagne",  label: "Sécurité en montagne",         icone: "⛰️", couleur: "#164A36", image: "images/securite-montagne.svg" },
+  { id: "securite-routiere",  label: "Sécurité routière",            icone: "🚦", couleur: "#C81620", image: "images/securite-routiere.svg" },
+  { id: "default",            label: "Autre thème",                  icone: "⭐", couleur: "#003D2B", image: "images/autre.svg" }
+];
+
+const RDV_STATS = {};
+
+const RDV_XML = `<!--
+Voici les themes possible : 
+agriculture, 
+secourisme, 
+informatique, 
+cambriolage, 
+cambriolage2, 
+cybersecurite, 
+informatique2, 
+sante-viellir, 
+secourisme2, 
+securite-montagne, 
+securite-routiere, 
+succession, 
+secourisme2 
+-->
+
+<Evenements>
+	<Evenement>
+		<id>P1</id>
+		<Date_Evenement>Jeudi 12 septembre 2024</Date_Evenement>
+		<Titre>Transmission du Patrimoine (donation, succession, assurance-vie…)</Titre>
+		<Localisation>Montastruc</Localisation>
+		<Theme>succession</Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>Maître Boyer, notaire, et d'un conseiller patrimonial du Crédit Agricole Toulouse 31.</Intervenant>
+		<HoraireGen>Jeudi 12 septembre 2024 à partir de 18h</HoraireGen>
+		<HoraireCocktail>20 heures</HoraireCocktail>
+		<HoraireConf>18h30</HoraireConf>
+		<Lieu>salle Jacques Brel</Lieu>
+		<Adresse>place d'Orléans</Adresse>
+		<Cp>Montastruc</Cp>
+		<NombreInscrit>0</NombreInscrit>
+		<NombrePlaceMax>147</NombrePlaceMax>
+		<Description>Pour vous accueillir dans les meilleures conditions, nous vous remercions de bien vouloir nous indiquer votre présence avant le 6 septembre 2024. </Description>
+		<Communes_Concernees>ARBON_ARGUENOS_ASPET_CABANAC-CAZAUX_CAZAUNOUS_COURET_ENCAUSSE-LES-THERMES_ESTADENS_GANTIES_IZAUT-DE-L’HÔTEL_JUZET D’IZAUT_MILHAS_MONCAUP_PORTET-D’ASPET_RAZECEUILLÉ_SENGOUAGNET_SOUEICH_AUSSEING_ARBAS_BELBÈZE EN COMMINGES_CASSAGNE_CASTAGNÈDE_CASTELBIAGUE_CHEIN DESSUS_ESCOULIS_FIGAROL_FOUGARON_FRANCAZAL_HERRAN_HIS_MANE_MARSOULAS_MAZÈRES SUR SALAT_MONTASTRUC DE SALIES_MONTGAILLARD DE SALIES_MONTSAUNES_ROQUEFORT SUR GARONNE_ROUÈDE_SALEICH_SALIES DU SALAT_TOUILLE_URAU_ARNAUD GUILHEM_AUZAS_LAFFITE TOUPIÈRE_LESTELLE DE SAINT-MARTORY_MANCIOUX_PROUPIARY_SAINT-MARTORY</Communes_Concernees>
+		<Code_caisse>028</Code_caisse>
+		<Libelle_caisse>PS COLOMIERS</Libelle_caisse>
+		<Date_envoi_email>28/03/2024</Date_envoi_email>
+		<Date_envoi_sms_J15>31/03/2024</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>01/04/2024</Date_envoi_sms_J2>
+	</Evenement>
+
+	<Evenement>
+		<id>P2</id>
+		<Date_Evenement>Jeudi 26 septembre 2024</Date_Evenement>
+		<Titre>Les gestes qui sauvent</Titre>
+		<Localisation>Baziege</Localisation>
+		<Theme>secourisme2</Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>Monsieur Benoît DUHAMEL, animateur 1 er secours et pompier à la caserne de Montgiscard.</Intervenant>
+		<HoraireGen>Jeudi 26 septembre à partir de 18h</HoraireGen>
+		<HoraireCocktail>20 heures</HoraireCocktail>
+		<HoraireConf>18h30</HoraireConf>
+		<Lieu>Salle de la Halle aux grains</Lieu>
+		<Adresse>121 Avenue de l'Hers</Adresse>
+		<Cp></Cp>
+		<NombreInscrit>0</NombreInscrit>
+		<NombrePlaceMax>147</NombrePlaceMax>
+		<Description>Pour vous accueillir dans les meilleures conditions, nous vous remercions de bien vouloir nous indiquer votre présence avant le 19 septembre 2024. </Description>
+		<Communes_Concernees>ARBON_ARGUENOS_ASPET_CABANAC-CAZAUX_CAZAUNOUS_COURET_ENCAUSSE-LES-THERMES_ESTADENS_GANTIES_IZAUT-DE-L’HÔTEL_JUZET D’IZAUT_MILHAS_MONCAUP_PORTET-D’ASPET_RAZECEUILLÉ_SENGOUAGNET_SOUEICH_AUSSEING_ARBAS_BELBÈZE EN COMMINGES_CASSAGNE_CASTAGNÈDE_CASTELBIAGUE_CHEIN DESSUS_ESCOULIS_FIGAROL_FOUGARON_FRANCAZAL_HERRAN_HIS_MANE_MARSOULAS_MAZÈRES SUR SALAT_MONTASTRUC DE SALIES_MONTGAILLARD DE SALIES_MONTSAUNES_ROQUEFORT SUR GARONNE_ROUÈDE_SALEICH_SALIES DU SALAT_TOUILLE_URAU_ARNAUD GUILHEM_AUZAS_LAFFITE TOUPIÈRE_LESTELLE DE SAINT-MARTORY_MANCIOUX_PROUPIARY_SAINT-MARTORY</Communes_Concernees>
+		<Code_caisse></Code_caisse>
+		<Libelle_caisse></Libelle_caisse>
+		<Date_envoi_email></Date_envoi_email>
+		<Date_envoi_sms_J15></Date_envoi_sms_J15>
+		<Date_envoi_sms_J2></Date_envoi_sms_J2>
+	</Evenement>
+
+	<Evenement>
+		<id>P3</id>
+		<Date_Evenement>Mercredi 25 septembre 2024</Date_Evenement>
+		<Titre>Les gestes qui sauvent</Titre>
+		<Localisation>Cintegabelle</Localisation>
+		<Theme>secourisme</Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>Pompiers de la caserne de Cintegabelle.</Intervenant>
+		<HoraireGen>18h00</HoraireGen>
+		<HoraireCocktail>20 heures</HoraireCocktail>
+		<HoraireConf>18h30</HoraireConf>
+		<Lieu>Salle des fêtes</Lieu>
+		<Adresse></Adresse>
+		<Cp></Cp>
+		<NombreInscrit>0</NombreInscrit>
+		<NombrePlaceMax>147</NombrePlaceMax>
+		<Description></Description>
+		<Communes_Concernees>ARBON_ARGUENOS_ASPET_CABANAC-CAZAUX_CAZAUNOUS_COURET_ENCAUSSE-LES-THERMES_ESTADENS_GANTIES_IZAUT-DE-L’HÔTEL_JUZET D’IZAUT_MILHAS_MONCAUP_PORTET-D’ASPET_RAZECEUILLÉ_SENGOUAGNET_SOUEICH_AUSSEING_ARBAS_BELBÈZE EN COMMINGES_CASSAGNE_CASTAGNÈDE_CASTELBIAGUE_CHEIN DESSUS_ESCOULIS_FIGAROL_FOUGARON_FRANCAZAL_HERRAN_HIS_MANE_MARSOULAS_MAZÈRES SUR SALAT_MONTASTRUC DE SALIES_MONTGAILLARD DE SALIES_MONTSAUNES_ROQUEFORT SUR GARONNE_ROUÈDE_SALEICH_SALIES DU SALAT_TOUILLE_URAU_ARNAUD GUILHEM_AUZAS_LAFFITE TOUPIÈRE_LESTELLE DE SAINT-MARTORY_MANCIOUX_PROUPIARY_SAINT-MARTORY</Communes_Concernees>
+		<Code_caisse></Code_caisse>
+		<Libelle_caisse></Libelle_caisse>
+		<Date_envoi_email></Date_envoi_email>
+		<Date_envoi_sms_J15></Date_envoi_sms_J15>
+		<Date_envoi_sms_J2></Date_envoi_sms_J2>
+	</Evenement>
+
+
+	<Evenement>
+		<id>1</id>
+		<Date_Evenement>Mercredi 21 Mai 2025</Date_Evenement>
+		<Titre>Transmission, succession, assurance vie</Titre>
+		<Localisation>ROUFFIAC TOLOSAN</Localisation>
+		<Theme>succession</Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>Maitre Aude SUAU et Maitre Julie SALLES</Intervenant>
+		<HoraireGen> Mercredi 21 Mai à partir de 18h00</HoraireGen>
+		<HoraireCocktail>20h00</HoraireCocktail> 
+		<HoraireConf>18h30</HoraireConf>
+		<Lieu>Salle polyvalente</Lieu>
+		<Adresse>4 chemin des Garrosses</Adresse>
+		<Cp>31180 - Rouffiac Tolosan</Cp>
+		<NombreInscrit>90</NombreInscrit>
+		<NombrePlaceMax>150</NombrePlaceMax>
+		<Description>La conférence sera également animée par 2 chargés de clientèles patrimoniales du Crédit Agricole Toulouse 31</Description>
+		<detail-evenement>Voici le details de l'evenement</detail-evenement>
+		<Code_caisse>058, 032</Code_caisse>
+		<Libelle_caisse>PS L_UNION, PS MONTGIROUVER</Libelle_caisse>
+		<Date_envoi_email>29/04/2025</Date_envoi_email>
+		<Date_envoi_sms_J15>06/05/2025</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>19/05/2025</Date_envoi_sms_J2>
+	</Evenement>
+
+	<Evenement>
+		<id>2</id>
+		<Date_Evenement>Mercredi 4 Juin 2025</Date_Evenement>
+		<Titre>La Cybersécurité</Titre>
+		<Localisation>FONBEAUZARD</Localisation>
+		<Theme>cybersecurite</Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>Major GUIMBAUD, Référent Sûreté Haute-Garonne de la Gendarmerie Nationale</Intervenant>
+		<HoraireGen> Mercredi 4 Juin à partir de 18h00</HoraireGen>
+		<HoraireCocktail>19h30</HoraireCocktail> 
+		<HoraireConf>18h30</HoraireConf>
+		<Lieu>Espace André Gentillet</Lieu>
+		<Adresse>Rue Jean Mermoz</Adresse>
+		<Cp>31140 - Fonbeauzard</Cp>
+		<NombreInscrit>50</NombreInscrit>
+		<NombrePlaceMax>300</NombrePlaceMax>
+		<Description>La conférence sera animée par le Major GUIMBAUD, Référent Sûreté Haute-Garonne de la Gendarmerie Nationale.</Description>
+		<detail-evenement>Voici le details de l'evenement</detail-evenement>
+		<Code_caisse>030, 062</Code_caisse>
+		<Libelle_caisse>PS AUCAMVILLE, PS VALLEE DE L'HERS</Libelle_caisse>
+		<Date_envoi_email>13/05/2025</Date_envoi_email>
+		<Date_envoi_sms_J15>20/05/2025</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>02/06/2025</Date_envoi_sms_J2>
+	</Evenement>
+
+	<Evenement>
+		<id>3</id>
+		<Date_Evenement>Jeudi 12 Juin 2025</Date_Evenement>
+		<Titre>La Cybersécurité</Titre>
+		<Localisation>LA MAGDELAINE-SUR-TARN</Localisation>
+		<Theme>cybersecurite</Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>Major GUIMBAUD, Référent Sûreté Haute-Garonne de la Gendarmerie Nationale</Intervenant>
+		<HoraireGen> Jeudi 12 Juin à partir de 18h00</HoraireGen>
+		<HoraireCocktail>20h00</HoraireCocktail> 
+		<HoraireConf>18h30</HoraireConf>
+		<Lieu>Salle des fêtes</Lieu>
+		<Adresse>178 route de Montjoire</Adresse>
+		<Cp>31340 - La Magdelaine-sur-Tarn</Cp>
+		<NombreInscrit>100</NombreInscrit>
+		<NombrePlaceMax>230</NombrePlaceMax>
+		<Description>L'association Rayons de Soleil en Ephad interviendra pour présenter l'association ainsi que le soutien apporté par la Fondation Crédit Agricole Toulouse 31. Lors de cette soirée un tirage au sort aura lieu avec de nombreux lots à gagner.</Description>
+		<detail-evenement>Voici le details de l'evenement</detail-evenement>
+		<Code_caisse>010, 022, 036</Code_caisse>
+		<Libelle_caisse>PS FRONTON, PS LA VALLEE DU TARN 31</Libelle_caisse>
+		<Date_envoi_email>21/05/2025</Date_envoi_email>
+		<Date_envoi_sms_J15>27/05/2025</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>10/06/2025</Date_envoi_sms_J2>
+	</Evenement>
+
+	<Evenement>
+		<id>4</id>
+		<Date_Evenement>Jeudi 12 Juin 2025</Date_Evenement>
+		<Titre>Sensibilisation aux cambriolages</Titre>
+		<Localisation>LE VERNET</Localisation>
+		<Theme>cambriolage</Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>Adjudant/Chef PRONO, Référent Sûreté Haute-Garonne de la Gendarmerie Nationale</Intervenant>
+		<HoraireGen> Jeudi 12 Juin à partir de 18h00</HoraireGen>
+		<HoraireCocktail>20h00</HoraireCocktail> 
+		<HoraireConf>18h30</HoraireConf>
+		<Lieu>Salle de l'Oratoire</Lieu>
+		<Adresse>Rue de l'Oratoire</Adresse>
+		<Cp>31810 - Le Vernet</Cp>
+		<NombreInscrit>0</NombreInscrit>
+		<NombrePlaceMax>100</NombrePlaceMax>
+		<Description>La conférence sera animée par l'Adjudant/Chef PRONO, Référent Sûreté Haute-Garonne de la Gendarmerie Nationale.</Description>
+		<detail-evenement>Voici le details de l'evenement</detail-evenement>
+		<Code_caisse>035</Code_caisse>
+		<Libelle_caisse>PS AUTERIVE</Libelle_caisse>
+		<Date_envoi_email>21/05/2025</Date_envoi_email>
+		<Date_envoi_sms_J15>27/05/2025</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>10/06/2025</Date_envoi_sms_J2>
+	</Evenement>
+
+	<Evenement>
+		<id>5</id>
+		<Date_Evenement>Mercredi 18 Juin 2025</Date_Evenement>
+		<Titre>La Cybersécurité</Titre>
+		<Localisation>MAUREVILLE</Localisation>
+		<Theme>cybersecurite</Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>Adjudant/Chef PRONO, Référent Sûreté Haute-Garonne de la Gendarmerie Nationale</Intervenant>
+		<HoraireGen> Mercredi 18 Juin à partir de 18h00</HoraireGen>
+		<HoraireCocktail>20h00</HoraireCocktail> 
+		<HoraireConf>18h30</HoraireConf>
+		<Lieu>Salle du syndicat des eaux de la Montagne Noire</Lieu>
+		<Adresse>ZA de Lourman</Adresse>
+		<Cp>31460- Maureville</Cp>
+		<NombreInscrit>0</NombreInscrit>
+		<NombrePlaceMax>150</NombrePlaceMax>
+		<Description>La conférence sera animée par l'Adjudant/Chef PRONO, Référent Sûreté Haute-Garonne de la Gendarmerie Nationale.</Description>
+		<detail-evenement>Voici le details de l'evenement</detail-evenement>
+		<Code_caisse>006, 024</Code_caisse>
+		<Libelle_caisse>PS CARAMAN, PS LANTA</Libelle_caisse>
+		<Date_envoi_email>27/05/2025</Date_envoi_email>
+		<Date_envoi_sms_J15>03/06/2025</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>16/06/2025</Date_envoi_sms_J2>
+	</Evenement>
+
+	<Evenement>
+		<id>6</id>
+		<Date_Evenement>Mercredi 24 Septembre 2025</Date_Evenement>
+		<Titre>La Prévention routière</Titre>
+		<Localisation>COLOMIERS</Localisation>
+		<Theme>securite-routiere</Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>la Police Nationale</Intervenant>
+		<HoraireGen> Mercredi 24 Septembre à partir de 18h00</HoraireGen>
+		<HoraireCocktail>20h00</HoraireCocktail> 
+		<HoraireConf>18h30</HoraireConf>
+		<Lieu>Complexe sportif associatif - salle n°5</Lieu>
+		<Adresse>Rue du Cantal</Adresse>
+		<Cp>31770- Colomiers</Cp>
+		<NombreInscrit>0</NombreInscrit>
+		<NombrePlaceMax>30</NombrePlaceMax>
+		<Description>La conférence traitera de différents thèmes : les nouvelles mobilités (trotinettes, vélos, ...) et la cohabitation routière, les distracteurs (écrans, mobiles, ...), le rappel des nouvelles signalisations et les bonnes pratiques.</Description>
+		<detail-evenement>Voici le details de l'evenement</detail-evenement>
+		<Code_caisse>028, 053</Code_caisse>
+		<Libelle_caisse>PS COLOMIERS, PS LEGUEVIN</Libelle_caisse>
+		<Date_envoi_email>02/09/2025</Date_envoi_email>
+		<Date_envoi_sms_J15>09/09/2025</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>22/09/2025</Date_envoi_sms_J2>
+	</Evenement>
+
+	<Evenement>
+		<id>7</id>
+		<Date_Evenement>Jeudi 25 Septembre 2025</Date_Evenement>
+		<Titre>Les clés du Bien Vieillir : droits et accompagnement</Titre>
+		<Localisation>CASTANET-TOLOSAN</Localisation>
+		<Theme>sante-viellir</Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>Mme Mélanie BOTTAREL, Maison des Solidarités, Chef de service Autonomie du Conseil Départemental et de Mme Esthel THOLOMET, Directrice à la Direction Santé et Autonomie de la Communauté d'Agglomération du SICOVAL</Intervenant>
+		<HoraireGen> Jeudi 25 Septembre à partir de 18h00</HoraireGen>
+		<HoraireCocktail>20h00</HoraireCocktail> 
+		<HoraireConf>18h30</HoraireConf>
+		<Lieu>Salle du Lac</Lieu>
+		<Adresse>Boulevard des Campanhols</Adresse>
+		<Cp>31320 Castanet-Tolosan</Cp>
+		<NombreInscrit>0</NombreInscrit>
+		<NombrePlaceMax>135</NombrePlaceMax>
+		<Description>Avec le témoignage de l'asssociation 6A qui a pour vocation d'accueillir et soutenir des personnes adultes atteintes de troubles cognitifs et leurs aidants.</Description>
+		<detail-evenement>Voici le details de l'evenement</detail-evenement>
+		<Code_caisse>052</Code_caisse>
+		<Libelle_caisse>PS CASTANET</Libelle_caisse>
+		<Date_envoi_email>02/09/2025</Date_envoi_email>
+		<Date_envoi_sms_J15>09/09/2025</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>22/09/2025</Date_envoi_sms_J2>
+	</Evenement>
+
+	<Evenement>
+		<id>8</id>
+		<Date_Evenement>Jeudi 9 Octobre 2025</Date_Evenement>
+		<Titre>Bien Vieillir à Toulouse : Aides et Solutions</Titre>
+		<Localisation>TOULOUSE</Localisation>
+		<Theme>sante-viellir</Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>Mme Marine LEFEVRE, Elue en charge des Séniors à la Mairie de Toulouse et Mme Cécile DIAZ-ROUFOSSE, Coordinatrice de la plateforme d'accompagnement et de répit des aidants du domaine de la Cadène</Intervenant>
+		<HoraireGen> Jeudi 9 Octobre à partir de 17h30</HoraireGen>
+		<HoraireCocktail>19h30</HoraireCocktail> 
+		<HoraireConf>18h00</HoraireConf>
+		<Lieu>Le Village By CA</Lieu>
+		<Adresse>31 Allées Jules Guesde</Adresse>
+		<Cp>31400 Toulouse</Cp>
+		<NombreInscrit>0</NombreInscrit>
+		<NombrePlaceMax>180</NombrePlaceMax>
+		<Description>Remise du chèque à l'Association ALIOCEMA, coup de coeur des sociétaires des Caisses locales de Toulouse lors du vote des Assemblées Générales cette année.</Description>
+		<detail-evenement>Voici le details de l'evenement</detail-evenement>
+		<Code_caisse>031, 040, 041, 056, 060</Code_caisse>
+		<Libelle_caisse>PS TOULOUSE OZENNE, PS TOULOUSE SUD-EST, PS TOULOUSE NORD, PS TLSE JEANNE D'ARC, PS TLSE RIVE GAUCHE</Libelle_caisse>
+		<Date_envoi_email>17/09/2025</Date_envoi_email>
+		<Date_envoi_sms_J15>24/09/2025</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>06/10/2025</Date_envoi_sms_J2>
+	</Evenement>
+
+	<Evenement>
+		<id>9</id>
+		<Date_Evenement>Jeudi 9 Octobre 2025</Date_Evenement>
+		<Titre>La Cybersécurité</Titre>
+		<Localisation>SANA</Localisation>
+		<Theme>cybersecurite</Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>l'Adjudant/chef PRONO, Référent Sûreté de la Gendarmerie Nationale de la Haute-Garonne</Intervenant>
+		<HoraireGen>Jeudi 9 Octobre à partir de 18h30</HoraireGen>
+		<HoraireCocktail>20h30</HoraireCocktail> 
+		<HoraireConf>19h00</HoraireConf>
+		<Lieu>Salle des fêtes</Lieu>
+		<Adresse>Chemin Roger Chaplet</Adresse>
+		<Cp>31220 Sana</Cp>
+		<NombreInscrit>0</NombreInscrit>
+		<NombrePlaceMax>150</NombrePlaceMax>
+		<Description></Description>
+		<detail-evenement>Voici le details de l'evenement</detail-evenement>
+		<Code_caisse>007, 026, 011</Code_caisse>
+		<Libelle_caisse>PS TERRES DU COMMINGES, PS FOUSSERET</Libelle_caisse>
+		<Date_envoi_email>17/09/2025</Date_envoi_email>
+		<Date_envoi_sms_J15>24/09/2025</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>06/10/2025</Date_envoi_sms_J2>
+	</Evenement>
+
+	<Evenement>
+		<id>10</id>
+		<Date_Evenement>Jeudi 16 Octobre 2025</Date_Evenement>
+		<Titre>Prévention arnaques</Titre>
+		<Localisation>BEAUZELLE</Localisation>
+		<Theme>cybersecurite</Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>la Gendarmerie de Beauzelle</Intervenant>
+		<HoraireGen>Jeudi 16 Octobre à partir de 18h30</HoraireGen>
+		<HoraireCocktail>20h30</HoraireCocktail> 
+		<HoraireConf>19h00</HoraireConf>
+		<Lieu>Salle des fêtes de Garossos</Lieu>
+		<Adresse>249 Rue du Riou</Adresse>
+		<Cp>31700 Beauzelle</Cp>
+		<NombreInscrit>0</NombreInscrit>
+		<NombrePlaceMax>150</NombrePlaceMax>
+		<Description></Description>
+		<detail-evenement>Voici le details de l'evenement</detail-evenement>
+		<Code_caisse>051</Code_caisse>
+		<Libelle_caisse>PS BLAGNAC</Libelle_caisse>
+		<Date_envoi_email>24/09/2025</Date_envoi_email>
+		<Date_envoi_sms_J15>01/10/2025</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>13/10/2025</Date_envoi_sms_J2>
+	</Evenement>
+
+	<Evenement>
+		<id>11</id>
+		<Date_Evenement>Jeudi 16 Octobre 2025</Date_Evenement>
+		<Titre>la Cybersécurité</Titre>
+		<Localisation>L'ISLE EN DODON</Localisation>
+		<Theme>cybersecurite</Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>l'Adjudant/chef PRONO, Référent Sûreté de la Gendarmerie Nationale de la Haute-Garonne</Intervenant>
+		<HoraireGen>Jeudi 16 Octobre à partir de 18h00</HoraireGen>
+		<HoraireCocktail>20h00</HoraireCocktail> 
+		<HoraireConf>18h30</HoraireConf>
+		<Lieu>Halle Centrale de la Mairie</Lieu>
+		<Adresse>Place de la Mairie</Adresse>
+		<Cp>31230 L'Isle en Dodon</Cp>
+		<NombreInscrit>0</NombreInscrit>
+		<NombrePlaceMax>120</NombrePlaceMax>
+		<Description></Description>
+		<detail-evenement>Voici le details de l'evenement</detail-evenement>
+		<Code_caisse>013, 004</Code_caisse>
+		<Libelle_caisse>PS L'ISLE EN DODON, PS BOULOGNE</Libelle_caisse>
+		<Date_envoi_email>24/09/2025</Date_envoi_email>
+		<Date_envoi_sms_J15>01/10/2025</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>13/10/2025</Date_envoi_sms_J2>
+	</Evenement>
+
+	<Evenement>
+		<id>12</id>
+		<Date_Evenement>Jeudi 6 Novembre 2025</Date_Evenement>
+		<Titre>Les gestes qui sauvent</Titre>
+		<Localisation>REVEL</Localisation>
+		<Theme>secourisme</Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>les Pompiers de Revel</Intervenant>
+		<HoraireGen>Jeudi 6 Novembre à partir de 18h00</HoraireGen>
+		<HoraireCocktail>20h00</HoraireCocktail> 
+		<HoraireConf>18h30</HoraireConf>
+		<Lieu>Salle Claude Nougaro</Lieu>
+		<Adresse>2 Rue Padouvenc de Castres</Adresse>
+		<Cp>31250 Revel</Cp>
+		<NombreInscrit>0</NombreInscrit>
+		<NombrePlaceMax>150</NombrePlaceMax>
+		<Description>Avec l'intervention des Pompiers de Revel</Description>
+		<detail-evenement>Voici le details de l'evenement</detail-evenement>
+		<Code_caisse>016</Code_caisse>
+		<Libelle_caisse>PS REVEL</Libelle_caisse>
+		<Date_envoi_email>16/10/2025</Date_envoi_email>
+		<Date_envoi_sms_J15>22/10/2025</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>03/11/2025</Date_envoi_sms_J2>
+	</Evenement>
+
+
+	<Evenement>
+		<id>13</id>
+		<Date_Evenement>Jeudi 6 Novembre 2025</Date_Evenement>
+		<Titre>Comprendre le Burn Out</Titre>
+		<Localisation>TOURNEFEUILLE</Localisation>
+		<Theme>sante-viellir</Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>l'Association SOS BURN OUT France</Intervenant>
+		<HoraireGen>Jeudi 6 Novembre à partir de 18h00</HoraireGen>
+		<HoraireCocktail>20h30</HoraireCocktail> 
+		<HoraireConf>18h30</HoraireConf>
+		<Lieu>Le Phare - Salle jaune</Lieu>
+		<Adresse>32 bis Route de Tarbes</Adresse>
+		<Cp>31170 Tournefeuille</Cp>
+		<NombreInscrit>0</NombreInscrit>
+		<NombrePlaceMax>150</NombrePlaceMax>
+		<Description>Avec l'intervention de l'Association SOS BURN OUT France</Description>
+		<detail-evenement>Voici le details de l'evenement</detail-evenement>
+		<Code_caisse>050, 057</Code_caisse>
+		<Libelle_caisse>PS PLAISANCE, PS TOURNEFEUILLE</Libelle_caisse>
+		<Date_envoi_email>16/10/2025</Date_envoi_email>
+		<Date_envoi_sms_J15>22/10/2025</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>03/11/2025</Date_envoi_sms_J2>
+	</Evenement>
+
+
+	<Evenement>
+		<id>14</id>
+		<Date_Evenement>Mercredi 19 Novembre 2025</Date_Evenement>
+		<Titre>Le défi de l’accès aux soins en Haute Garonne : l’exemple du Muretain</Titre>
+		<Localisation>MURET</Localisation>
+		<Theme>sante-viellir</Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>Avec l'intervention de Nicolas HOMEHR, médecin généraliste, Président de la CPTS du Sud-Toulousain et en présence de Sylvie DE GRAEVE, pharmacienne et Thibaut HARANG, représentant Omedys</Intervenant>
+		<HoraireGen>Mercredi 19 Novembre à partir de 18h00</HoraireGen>
+		<HoraireCocktail>20h00</HoraireCocktail> 
+		<HoraireConf>18h45</HoraireConf>
+		<Lieu>Cinéma Véo</Lieu>
+		<Adresse>49 Avenue d'Europe</Adresse>
+		<Cp>31600 Muret</Cp>
+		<NombreInscrit>0</NombreInscrit>
+		<NombrePlaceMax>150</NombrePlaceMax>
+		<Description>Avec l'intervention de Nicolas HOMEHR, médecin généraliste, Président de la CPTS du Sud-Toulousain et en présence de Sylvie DE GRAEVE, pharmacienne et Thibaut HARANG, représentant Omedys</Description>
+		<detail-evenement>Voici le details de l'evenement</detail-evenement>
+		<Code_caisse>014, 018</Code_caisse>
+		<Libelle_caisse>PS MURET, PS SAVES</Libelle_caisse>
+		<Date_envoi_email>28/10/2025</Date_envoi_email>
+		<Date_envoi_sms_J15>04/11/2025</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>17/11/2025</Date_envoi_sms_J2>
+	</Evenement>
+
+
+	<Evenement>
+		<id>15</id>
+		<Date_Evenement>Jeudi 20 Novembre 2025</Date_Evenement>
+		<Titre>Les risques en montagne : informons-nous pour éviter les dangers</Titre>
+		<Localisation>BAGNERES-DE-LUCHON</Localisation>
+		<Theme>securite-montagne</Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>Sébastien LUCENA, Commandant d’Unité du Peloton de Gendarmerie de Haute Montagne de Bagnères-de-Luchon et son équipe</Intervenant>
+		<HoraireGen>Jeudi 20 Novembre à partir de 18h00</HoraireGen>
+		<HoraireCocktail>21h00</HoraireCocktail> 
+		<HoraireConf>18h30</HoraireConf>
+		<Lieu>Salle Henri PAC</Lieu>
+		<Adresse>Place Richelieu</Adresse>
+		<Cp>31110 Bagnères-de-Luchon</Cp>
+		<NombreInscrit>0</NombreInscrit>
+		<NombrePlaceMax>150</NombrePlaceMax>
+		<Description>Avec l'intervention de Sébastien LUCENA , Commandant d’Unité du Peloton de Gendarmerie de Haute Montagne de Bagnères-de-Luchon et son équipe</Description>
+		<detail-evenement>Voici le details de l'evenement</detail-evenement>
+		<Code_caisse>054</Code_caisse>
+		<Libelle_caisse>PS BAGNERES DE LUCHON</Libelle_caisse>
+		<Date_envoi_email>28/10/2025</Date_envoi_email>
+		<Date_envoi_sms_J15>04/11/2025</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>17/11/2025</Date_envoi_sms_J2>
+	</Evenement>
+
+
+	<Evenement>
+		<id>16</id>
+		<Date_Evenement>Jeudi 20 Novembre 2025</Date_Evenement>
+		<Titre>La mobilité</Titre>
+		<Localisation>DONNEVILLE</Localisation>
+		<Theme></Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>l'Association AutoLien</Intervenant>
+		<HoraireGen>Jeudi 20 Novembre à partir de 18h00</HoraireGen>
+		<HoraireCocktail>20h00</HoraireCocktail> 
+		<HoraireConf>18h30</HoraireConf>
+		<Lieu>Salle des fêtes</Lieu>
+		<Adresse>28 RN 113</Adresse>
+		<Cp>31450 Donneville</Cp>
+		<NombreInscrit>0</NombreInscrit>
+		<NombrePlaceMax>150</NombrePlaceMax>
+		<Description>Avec l'intervention de la société AutoLien</Description>
+		<detail-evenement>Voici le details de l'evenement</detail-evenement>
+		<Code_caisse>055</Code_caisse>
+		<Libelle_caisse>PS MONTGISCARD</Libelle_caisse>
+		<Date_envoi_email>28/10/2025</Date_envoi_email>
+		<Date_envoi_sms_J15>04/11/2025</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>17/11/2025</Date_envoi_sms_J2>
+	</Evenement>
+
+
+	<Evenement>
+		<id>17</id>
+		<Date_Evenement>Mardi 25 Novembre 2025</Date_Evenement>
+		<Titre>La Cybersécurité</Titre>
+		<Localisation>QUINT-FONSEGRIVES</Localisation>
+		<Theme>cybersecurite</Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>l'Adjudant/chef PRONO, Référent Sûreté de la Gendarmerie Nationale de la Haute-Garonne</Intervenant>
+		<HoraireGen>Mardi 25 Novembre à partir de 18h00</HoraireGen>
+		<HoraireCocktail>20h00</HoraireCocktail> 
+		<HoraireConf>18h30</HoraireConf>
+		<Lieu>Espace Bernard Solera</Lieu>
+		<Adresse>38-40 Route de la Saune</Adresse>
+		<Cp>31130 Quint-Fonsegrives</Cp>
+		<NombreInscrit>0</NombreInscrit>
+		<NombrePlaceMax>150</NombrePlaceMax>
+		<Description>Avec l'intervention de l'Adjudant/chef PRONO, Référent Sûreté de la Gendarmerie Nationale de la Haute-Garonne</Description>
+		<detail-evenement>Voici le details de l'evenement</detail-evenement>
+		<Code_caisse>059</Code_caisse>
+		<Libelle_caisse>PS BALMA FONSEGRIVES</Libelle_caisse>
+		<Date_envoi_email>31/10/2025</Date_envoi_email>
+		<Date_envoi_sms_J15>07/11/2025</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>21/11/2025</Date_envoi_sms_J2>
+	</Evenement>
+
+	<Evenement>
+		<id>18</id>
+		<Date_Evenement>Mardi 16 Décembre 2025</Date_Evenement>
+		<Titre>La prévention des cambriolages</Titre>
+		<Localisation>SAINT-ORENS-DE-GAMEVILLE</Localisation>
+		<Theme>cambriolage</Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>l'Adjudant/chef PRONO, Référent Sûreté de la Gendarmerie Nationale de la Haute-Garonne</Intervenant>
+		<HoraireGen>Mardi 16 Décembre à partir de 18h00</HoraireGen>
+		<HoraireCocktail>20h00</HoraireCocktail> 
+		<HoraireConf>18h30</HoraireConf>
+		<Lieu>Chateau Catala</Lieu>
+		<Adresse>49 Boulevard Catala</Adresse>
+		<Cp>31650 Saint-Orens-de-Gameville</Cp>
+		<NombreInscrit>0</NombreInscrit>
+		<NombrePlaceMax>100</NombrePlaceMax>
+		<Description>Avec l'intervention de l'Adjudant/chef PRONO, Référent Sûreté de la Gendarmerie Nationale de la Haute-Garonne</Description>
+		<detail-evenement>Voici le details de l'evenement</detail-evenement>
+		<Code_caisse>034</Code_caisse>
+		<Libelle_caisse>PS SAINT-ORENS</Libelle_caisse>
+		<Date_envoi_email>24/11/2025</Date_envoi_email>
+		<Date_envoi_sms_J15>01/12/2025</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>12/12/2025</Date_envoi_sms_J2>
+	</Evenement>
+
+<Evenement>
+		<id>19</id>
+		<Date_Evenement>jeudi 29 janvier 2026</Date_Evenement>
+		<Titre>Venez découvrir ICOPE, programme de prévention santé pour les plus de 60 ans</Titre>
+		<Localisation>CUGNAUX</Localisation>
+		<Theme>sante-viellir</Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>Sandrine BLATZHEIM, infirmière animatrice territoriale ICOPE</Intervenant>
+		<HoraireGen>Jeudi 29 janvier à partir de 18h30</HoraireGen>
+		<HoraireCocktail>20h30</HoraireCocktail> 
+		<HoraireConf>19h00</HoraireConf>
+		<Lieu>Salle Albert Camus</Lieu>
+		<Adresse>1 Place de la République</Adresse>
+		<Cp>31270 CUGNAUX</Cp>
+		<NombreInscrit>0</NombreInscrit>
+		<NombrePlaceMax>100</NombrePlaceMax>
+		<Description>Destiné aux personnes de plus de 60 ans, autonomes et vivant à leur domicile, ICOPE est un programme de prévention qui permet de tester son capital santé et de le suivre dans le temps</Description>
+		<detail-evenement>Voici le details de l'evenement</detail-evenement>
+		<Code_caisse>029</Code_caisse>
+		<Libelle_caisse>PS CUGNAUX</Libelle_caisse>
+		<Date_envoi_email>06/01/2026</Date_envoi_email>
+		<Date_envoi_sms_J15>13/01/2026</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>26/01/2026</Date_envoi_sms_J2>
+	</Evenement>
+
+
+<Evenement>
+		<id>20</id>
+		<Date_Evenement>Jeudi 11 juin 2026</Date_Evenement>
+		<Titre>Les gestes qui sauvent</Titre>
+		<Localisation>VILLEFRANCHE-DE-LAURAGAIS</Localisation>
+		<Theme>secourisme</Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>Benoit DUHAMEL, moniteur 1ers secours, pompier de la caserne de Montgiscard</Intervenant>
+		<HoraireGen>Jeudi 11 juin à partir de 18h00</HoraireGen>
+		<HoraireCocktail>20h00</HoraireCocktail> 
+		<HoraireConf>18h30</HoraireConf>
+		<Lieu>Foyer Rural</Lieu>
+		<Adresse>Place Gambetta</Adresse>
+		<Cp>31290 VILLEFRANCHE-DE-LAURAGAIS</Cp>
+		<NombreInscrit>0</NombreInscrit>
+		<NombrePlaceMax>150</NombrePlaceMax>
+		<Description>Mme GARDEY sera également présente pour présenter l'Association MELISSA, lauréate du "Coup de Coeur Sociétaires 2026"</Description>
+		<detail-evenement> Voici le détail de l'évènement </detail-evenement>
+		<Code_caisse>021</Code_caisse>
+		<Libelle_caisse>PS LAURAGAIS</Libelle_caisse>
+		<Date_envoi_email>21/05/2026</Date_envoi_email>
+		<Date_envoi_sms_J15>27/05/2026</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>08/06/2026</Date_envoi_sms_J2>
+	</Evenement>
+
+<Evenement>
+		<id>21</id>
+		<Date_Evenement>Jeudi 25 juin 2026</Date_Evenement>
+		<Titre>La cybersécurité</Titre>
+		<Localisation>TOURNEFEUILLE</Localisation>
+		<Theme>cybersecurite</Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>Maréchal des logis-chef MARESS, Référent Sûreté de la Gendarmerie Nationale de la Haute-Garonne</Intervenant>
+		<HoraireGen>Jeudi 25 juin à partir de 18h30</HoraireGen>
+		<HoraireCocktail>20h00</HoraireCocktail> 
+		<HoraireConf>19h00</HoraireConf>
+		<Lieu>Le Phare - Salle Jaune</Lieu>
+		<Adresse>32 bis Route de Tarbes</Adresse>
+		<Cp>31170 TOURNEFEUILLE</Cp>
+		<NombreInscrit>0</NombreInscrit>
+		<NombrePlaceMax>150</NombrePlaceMax>
+		<Description>Avec l'intervention d'Isabelle MARESS, Maréchal des logis-chef et Référent Sûreté de la Gendarmerie Nationale de la Haute-Garonne</Description>
+		<detail-evenement> Voici le détail de l'évènement </detail-evenement>
+		<Code_caisse>050, 057</Code_caisse>
+		<Libelle_caisse>PS PLAISANCE, PS TOURNEFEUILLE</Libelle_caisse>
+		<Date_envoi_email>02/06/2026</Date_envoi_email>
+		<Date_envoi_sms_J15>09/06/2026</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>22/06/2026</Date_envoi_sms_J2>
+	</Evenement>
+
+
+    <Evenement>
+		<id>22</id>
+		<Date_Evenement>Mercredi 17 juin 2026</Date_Evenement>
+		<Titre>Les Addictions</Titre>
+		<Localisation>COLOMIERS</Localisation>
+		<Theme></Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>la Police Nationale</Intervenant>
+		<HoraireGen>Mercredi 17 juin à partir de 18h00</HoraireGen>
+		<HoraireCocktail>20h30</HoraireCocktail> 
+		<HoraireConf>18h30</HoraireConf>
+		<Lieu>Complexe sportif associatif - salle n°5</Lieu>
+		<Adresse>Rue du Cantal</Adresse>
+		<Cp>31770 COLOMIERS</Cp>
+		<NombreInscrit>0</NombreInscrit>
+		<NombrePlaceMax>50</NombrePlaceMax>
+		<Description>La réunion sera animée par la Police Nationale</Description>
+		<detail-evenement> Voici le détail de l'évènement </detail-evenement>
+		<Code_caisse>028</Code_caisse>
+		<Libelle_caisse>PS COLOMIERS</Libelle_caisse>
+		<Date_envoi_email>26/05/2026</Date_envoi_email>
+		<Date_envoi_sms_J15>02/06/2026</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>16/06/2026</Date_envoi_sms_J2>
+	</Evenement>
+	
+	
+	<Evenement>
+		<id>23</id>
+		<Date_Evenement>Mardi 13 Octobre 2026</Date_Evenement>
+		<Titre>L'Intelligence Artificielle, décrypter, illustrer et comprendre</Titre>
+		<Localisation>QUINT-FONSEGRIVES</Localisation>
+		<Theme>default</Theme>
+		<Statut>En cours</Statut>
+		<Intervenant>Un expert du Crédit Agricole Toulouse 31</Intervenant>
+		<HoraireGen>Mardi 13 Octobre à partir de 18h00</HoraireGen>
+		<HoraireCocktail>20h00</HoraireCocktail> 
+		<HoraireConf>18h30</HoraireConf>
+		<Lieu>Espace Bernard Soléra</Lieu>
+		<Adresse>38-40 Route de la Saune</Adresse>
+		<Cp>31130 QUINT-FONSEGRIVES</Cp>
+		<NombreInscrit>0</NombreInscrit>
+		<NombrePlaceMax>350</NombrePlaceMax>
+		<Description>La réunion sera animée par un expert du Crédit Agricole Toulouse 31</Description>
+		<detail-evenement> Voici le détail de l'évènement </detail-evenement>
+		<Code_caisse>006, 034, 059</Code_caisse>
+		<Libelle_caisse>PS LA SEILLONNE, PS SAINT-ORENS, PS BALMA FONSEGRIVES</Libelle_caisse>
+		<Date_envoi_email>21/09/2026</Date_envoi_email>
+		<Date_envoi_sms_J15>28/09/2026</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>09/10/2026</Date_envoi_sms_J2>
+	</Evenement>
+
+
+</Evenements>`;
+
+/** Contenu exact de coli-1-page.html, utilisé uniquement pour composer
+ *  un aperçu en direct (bouton "Prévisualiser") — jamais modifié ni exporté. */
+const COLI1_HTML = `<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rendez-vous Citoyens — Crédit Agricole Toulouse 31</title>
+<style>
+/* =====================================================================
+   RENDEZ-VOUS CITOYENS — FEUILLE DE STYLE
+   ===================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap');
+
+:root {
+  /* Palette Crédit Agricole officielle : vert #006F4E, turquoise #009B9D, rouge #ED1C24 */
+  --navy: #00432F;
+  --navy-dark: #002B1E;
+  --ink: #002016;
+  --ink-2: #001a12;
+  --blue-accent: #006F4E;
+  --blue-pill: #009B9D;
+  --blue-box: #009B9D;
+  --blue-box-dark: #00787A;
+  --rust: #ED1C24;
+  --grey-text: #52645d;
+  --bg: #f4f9f7;
+  --card-bg: #ffffff;
+  --border: #dfe9e5;
+  --radius: 14px;
+  --shadow: 0 6px 20px rgba(0, 67, 47, 0.1);
+
+  --grad-hero: linear-gradient(135deg, #002016 0%, #00432F 45%, #009B9D 100%);
+  --grad-accent: linear-gradient(95deg, #009B9D 0%, #009B9D 40%, #ED1C24 68%, #ED1C24 100%);
+  --grad-btn: linear-gradient(120deg, #006F4E 0%, #009B9D 100%);
+  --amber: #ED1C24;
+  --cyan: #009B9D;
+
+  --font: 'Poppins', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-display: 'Outfit', 'Poppins', 'Segoe UI', system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--navy);
+  line-height: 1.5;
+}
+
+img { max-width: 100%; display: block; }
+
+.container {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+a { color: inherit; }
+
+/* ---------- HERO ---------- */
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  background: var(--grad-hero);
+  padding: 74px 0 90px;
+  isolation: isolate;
+}
+
+.hero-grid-overlay {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.045) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 20%, #000 40%, transparent 90%);
+  z-index: 0;
+}
+
+.hero-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+  z-index: 0;
+  opacity: 0.55;
+}
+.hero-glow-1 { width: 420px; height: 420px; background: #009B9D; top: -160px; right: -80px; }
+.hero-glow-2 { width: 380px; height: 380px; background: #ED1C24; bottom: -200px; left: -100px; opacity: 0.35; }
+
+.hero-inner {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.eyebrow-pill {
+  display: inline-block;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.18);
+  backdrop-filter: blur(6px);
+  color: #e6e8ff;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  padding: 8px 18px;
+  border-radius: 999px;
+  margin-bottom: 26px;
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.4rem, 5vw, 3.8rem);
+  line-height: 1.08;
+  color: #fff;
+  margin: 0 0 18px;
+  letter-spacing: -0.5px;
+}
+.hero-title .accent {
+  background: var(--grad-accent);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero-subtitle {
+  color: rgba(230,232,255,0.82);
+  font-size: 1.08rem;
+  max-width: 560px;
+  margin: 0 0 40px;
+}
+
+.hero-stats {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+.hero-stat {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.14);
+  backdrop-filter: blur(6px);
+  border-radius: 16px;
+  padding: 16px 28px;
+  min-width: 140px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.hero-stat strong {
+  font-family: var(--font-display);
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: #fff;
+}
+.hero-stat span {
+  font-size: 0.72rem;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: rgba(230,232,255,0.7);
+  font-weight: 600;
+}
+
+/* ---------- BUTTONS ---------- */
+
+.btn {
+  display: inline-block;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font);
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 11px 22px;
+  border-radius: 999px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, filter 0.15s ease;
+  text-decoration: none;
+}
+.btn:hover { transform: translateY(-2px); }
+
+.btn-primary {
+  background: var(--navy);
+  color: #fff;
+}
+.btn-primary:hover { background: var(--navy-dark); box-shadow: 0 8px 20px rgba(0,43,30,0.3); }
+
+.btn-outline {
+  background: #fff;
+  color: var(--navy);
+  border: 1.5px solid var(--navy);
+}
+.btn-outline:hover { background: var(--navy); color: #fff; }
+
+.btn-soft {
+  background: var(--grad-btn);
+  color: #fff;
+  box-shadow: 0 8px 22px rgba(0,155,157,0.35);
+}
+.btn-soft:hover { filter: brightness(1.08); box-shadow: 0 10px 26px rgba(0,155,157,0.45); }
+
+.btn-hero {
+  background: var(--grad-btn);
+  color: #fff;
+  font-size: 0.82rem;
+  padding: 15px 30px;
+  box-shadow: 0 10px 30px rgba(0,155,157,0.45);
+}
+.btn-hero:hover { filter: brightness(1.1); box-shadow: 0 14px 36px rgba(0,155,157,0.55); }
+.btn-hero .arrow { display: inline-block; margin-left: 6px; animation: bob 1.6s ease-in-out infinite; }
+@keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(3px); } }
+
+.btn-small { padding: 8px 16px; font-size: 0.68rem; }
+
+/* ---------- SECTIONS ---------- */
+
+.section { padding: 56px 0; }
+.section.intro-text { padding: 24px 0; }
+.section-head { margin-bottom: 32px; display: flex; align-items: baseline; gap: 12px; }
+.section-title {
+  font-family: var(--font-display);
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: var(--navy-dark);
+  letter-spacing: -0.2px;
+  margin: 0;
+  position: relative;
+  padding-left: 18px;
+}
+.section-title::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 6px;
+  bottom: 6px;
+  width: 6px;
+  border-radius: 4px;
+  background: var(--grad-btn);
+}
+
+.intro-text {
+  max-width: 880px;
+  margin: 0 auto;
+  text-align: center;
+  color: var(--grey-text);
+  font-size: 0.98rem;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+.intro-text p { margin: 0 0 14px; }
+.intro-text strong { color: var(--navy-dark); }
+.intro-illustration { flex: 0 0 190px; text-align: center; }
+.intro-illustration img { width: 150px; height: 150px; margin: 0 auto; }
+.intro-text .intro-copy { flex: 1 1 420px; }
+
+/* ---------- CARDS GRID ---------- */
+
+.cards-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 26px;
+}
+
+.card {
+  background: var(--card-bg);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  flex: 1 1 280px;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(0, 67, 47, 0.16);
+}
+
+.card-media {
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3.2rem;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+.card-media img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.35s ease; }
+.card:hover .card-media img { transform: scale(1.06); }
+
+.card-body {
+  padding: 18px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.card-title { font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; color: var(--navy-dark); margin: 0; }
+.card-location { font-size: 0.72rem; letter-spacing: 1px; text-transform: uppercase; color: var(--grey-text); font-weight: 600; }
+.card-date { font-size: 0.88rem; color: var(--navy); }
+.card-places { font-size: 0.78rem; font-weight: 700; color: var(--rust); letter-spacing: 0.5px; }
+
+.card-actions {
+  margin-top: auto;
+  padding-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.card-actions .btn { width: 100%; }
+
+.badge {
+  position: absolute;
+  bottom: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(13, 24, 54, 0.55);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255,255,255,0.35);
+  color: #fff;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 5px 14px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+}
+.badge.badge-done { background: rgba(90, 98, 117, 0.6); }
+.badge.badge-complet { background: rgba(237, 28, 36, 0.75); }
+.badge.badge-limite { background: rgba(0, 155, 157, 0.85); }
+
+/* ---------- PAST EVENTS / PAGINATION ---------- */
+
+.past-wrap { position: relative; }
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 30px;
+}
+.pagination-controls button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  transform: none;
+}
+.page-indicator {
+  align-self: center;
+  font-size: 0.85rem;
+  color: var(--grey-text);
+  font-weight: 600;
+}
+
+/* ---------- STATS ---------- */
+
+.stats-section {
+  background: var(--grad-hero);
+  position: relative;
+  overflow: hidden;
+}
+.stats-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-size: 26px 26px;
+}
+.stats-section .section-head { text-align: center; justify-content: center; }
+.stats-section .section-title { color: #fff; padding-left: 0; }
+.stats-section .section-title::before { display: none; }
+.stats-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 24px;
+  text-align: center;
+  margin-top: 30px;
+}
+.stat-number {
+  font-family: var(--font-display);
+  font-size: 2.6rem;
+  font-weight: 700;
+  color: #3FD1D3;
+}
+.stat:nth-child(even) .stat-number { color: #FF6A6E; }
+.stat-label { font-size: 0.78rem; letter-spacing: 0.6px; text-transform: uppercase; color: rgba(230,232,255,0.75); font-weight: 600; margin-top: 4px; }
+.stats-subtitle { color: rgba(230,232,255,0.75); margin-top: 6px; text-align: center; }
+
+/* ---------- FOOTER CTA ---------- */
+
+.footer-cta {
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 34px;
+  margin: 50px 0 20px;
+  text-align: center;
+  background: linear-gradient(180deg, #fff, #f7f7fd);
+}
+.footer-cta p { margin: 0 0 18px; font-weight: 700; font-family: var(--font-display); font-size: 1.1rem; color: var(--navy-dark); }
+.footer-cta .btn-row { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
+
+.site-footer {
+  text-align: center;
+  padding: 24px;
+  font-size: 0.75rem;
+  color: var(--grey-text);
+}
+
+/* ---------- MODAL (fiche détaillée d'un événement) ---------- */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 20, 16, 0.7);
+  backdrop-filter: blur(3px);
+  display: none;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 40px 16px;
+  overflow-y: auto;
+  z-index: 1000;
+}
+.modal-overlay.open { display: flex; }
+
+.modal-box {
+  background: #fff;
+  width: 100%;
+  max-width: 980px;
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 0 30px 70px rgba(0,0,0,0.4);
+  animation: modal-in 0.22s ease;
+}
+@keyframes modal-in {
+  from { opacity: 0; transform: translateY(16px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 26px;
+  background: var(--grad-hero);
+}
+.modal-kicker {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #fff;
+  letter-spacing: 0.3px;
+}
+.modal-close {
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: #fff;
+  border-radius: 999px;
+  padding: 9px 20px;
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.modal-close:hover { background: rgba(255,255,255,0.22); }
+
+.modal-body {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 30px;
+  padding: 30px;
+}
+@media (max-width: 720px) {
+  .modal-body { grid-template-columns: 1fr; }
+}
+
+.modal-media-wrap { position: relative; }
+.modal-media {
+  border-radius: 16px;
+  overflow: hidden;
+  height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 5rem;
+  color: #fff;
+}
+.modal-media img { width: 100%; height: 100%; object-fit: cover; }
+
+.modal-info .eyebrow { color: var(--grey-text); font-size: 0.9rem; margin: 0 0 2px; }
+.modal-info .eyebrow strong { color: var(--navy-dark); }
+.modal-info .event-title {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 1.4rem;
+  color: var(--rust);
+  margin: 6px 0 14px;
+}
+.modal-info .presence { font-size: 0.92rem; color: var(--navy-dark); margin-bottom: 18px; }
+.modal-info .presence strong { font-weight: 700; }
+
+.info-box {
+  background: var(--blue-box);
+  color: #ffffff;
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin-bottom: 16px;
+}
+.info-box h3 {
+  margin: 0 0 8px;
+  font-size: 0.85rem;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+.info-box p { margin: 2px 0; font-size: 0.9rem; }
+
+.modal-info .places { font-weight: 700; margin-bottom: 8px; font-size: 0.92rem; }
+.modal-info .desc { font-size: 0.9rem; color: var(--navy-dark); margin-bottom: 20px; }
+.modal-info .desc strong { font-weight: 700; }
+
+.modal-communes {
+  font-size: 0.8rem;
+  color: var(--grey-text);
+  margin-bottom: 18px;
+}
+.modal-communes summary { cursor: pointer; font-weight: 600; color: var(--navy); margin-bottom: 6px; }
+
+@media (max-width: 640px) {
+  .hero { padding: 56px 0 70px; }
+  .modal-body { padding: 20px; }
+}
+
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-glow hero-glow-1"></div>
+  <div class="hero-glow hero-glow-2"></div>
+  <div class="hero-grid-overlay"></div>
+  <div class="container hero-inner">
+    <span class="eyebrow-pill">Crédit Agricole Toulouse 31</span>
+    <h1 class="hero-title">Les Rendez-vous <span class="accent">Citoyens</span></h1>
+    <p class="hero-subtitle">Des conférences utiles et gratuites, ouvertes à tous, partout sur le territoire.</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><strong id="hero-stat-evenements">0</strong><span>événements</span></div>
+      <div class="hero-stat"><strong id="hero-stat-participants">0</strong><span>participants</span></div>
+      <div class="hero-stat"><strong id="hero-stat-themes">0</strong><span>thèmes abordés</span></div>
+    </div>
+    <a href="#a-venir" class="btn btn-hero">Voir les prochains événements <span class="arrow">↓</span></a>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- ÉVÉNEMENTS À VENIR -->
+  <section class="section" id="a-venir">
+    <div class="section-head">
+      <h2 class="section-title">Événements à venir</h2>
+    </div>
+    <div class="cards-grid" id="upcoming-grid"></div>
+  </section>
+
+  <!-- TEXTE DE PRÉSENTATION -->
+  <section class="section intro-text">
+    <div class="intro-illustration"><img src="images/communaute.svg" alt=""></div>
+    <div class="intro-copy">
+      <p>Les <strong>Rendez-vous Citoyens</strong> sont des conférences gratuites organisées par le Crédit Agricole Toulouse 31 et ses Caisses locales sur l'ensemble du territoire.</p>
+      <p>Ils abordent des thématiques variées et concrètes, comme les gestes qui sauvent, la cybersécurité, la transmission du patrimoine, la rénovation énergétique, la prévention des cambriolages et bien d'autres sujets pensés pour faciliter votre quotidien. Ces rencontres ont pour objectif d'informer, de sensibiliser et de répondre aux besoins des citoyens.</p>
+      <p>Chaque événement se termine par un <strong>moment convivial autour d'un cocktail</strong>, favorisant les échanges entre participants et intervenants.</p>
+      <p><strong>Un rendez-vous utile et humain, à ne pas manquer !</strong></p>
+    </div>
+  </section>
+
+  <!-- ÉVÉNEMENTS PASSÉS -->
+  <section class="section past-wrap" id="passes">
+    <div class="section-head">
+      <h2 class="section-title">Événements passés</h2>
+    </div>
+    <div class="cards-grid" id="past-grid"></div>
+    <div class="pagination-controls">
+      <button id="past-prev" class="btn btn-outline btn-small">← Précédent</button>
+      <span class="page-indicator" id="past-page-indicator"></span>
+      <button id="past-next" class="btn btn-primary btn-small">Suivant →</button>
+    </div>
+  </section>
+
+</main>
+
+<!-- CHIFFRES CLÉS -->
+<section class="stats-section">
+  <div class="container section">
+    <div class="section-head" style="text-align:center">
+      <h2 class="section-title">Les Rendez-vous Citoyens en chiffres</h2>
+      <p class="stats-subtitle">Découvrez quelques chiffres clés sur nos rendez-vous citoyens.</p>
+    </div>
+    <div class="stats-grid">
+      <div class="stat"><div class="stat-number" id="stat-evenements">0</div><div class="stat-label">Événements</div></div>
+      <div class="stat"><div class="stat-number" id="stat-participants">0</div><div class="stat-label">Participants</div></div>
+      <div class="stat"><div class="stat-number" id="stat-intervenants">0</div><div class="stat-label">Intervenants</div></div>
+      <div class="stat"><div class="stat-number" id="stat-themes">0</div><div class="stat-label">Thèmes abordés</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="footer-cta">
+    <p>Découvrez d'autres actions</p>
+    <div class="btn-row">
+      <a href="#" class="btn btn-outline">Votre espace sociétaire</a>
+      <a href="#" class="btn btn-outline">Nos actualités au cœur du territoire</a>
+    </div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  Crédit Agricole Toulouse 31 — Rendez-vous Citoyens · Page de démonstration
+</footer>
+
+<!-- MODALE DE DÉTAIL -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span class="modal-kicker">Rendez-vous Citoyens</span>
+      <button class="modal-close" id="modal-close">✕ Fermer</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-media-wrap">
+        <div class="modal-media" id="modal-media"></div>
+        <span class="badge" id="modal-badge">À venir</span>
+      </div>
+      <div class="modal-info">
+        <p class="eyebrow">Nous avons le plaisir de vous convier au :<br><strong>Rendez-vous Citoyens</strong> — <span id="modal-theme-label"></span></p>
+        <p class="event-title" id="modal-title"></p>
+        <p class="presence" id="modal-presence"></p>
+
+        <div class="info-box">
+          <h3>Lieu &amp; horaires</h3>
+          <div id="modal-infos"></div>
+        </div>
+
+        <p class="places" id="modal-places"></p>
+        <p class="desc" id="modal-desc"></p>
+
+        <details class="modal-communes" id="modal-communes">
+          <summary>Communes concernées</summary>
+          <div class="communes-list"></div>
+        </details>
+
+        <a class="btn btn-soft" id="modal-inscrire" href="#">S'inscrire</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =====================================================================
+   RENDEZ-VOUS CITOYENS — LOGIQUE DE LA PAGE (COMPOSANT COLI N°1)
+   RDV_THEMES / RDV_STATS sont définis ici même (juste en dessous).
+   Les données événements NE SONT PAS dans ce fichier : elles doivent
+   se trouver dans un second composant COLI sur la même page AEM,
+   contenant exactement le fichier coli-2-donnees.html (voir ce fichier
+   pour les instructions de mise à jour via editeur.html).
+   ===================================================================== */
+
+(function () {
+  "use strict";
+
+  const RDV_THEMES = [
+    { id: "secourisme",         label: "Les gestes qui sauvent",      icone: "🚑", couleur: "#C81620", image: "images/secourisme.svg" },
+    { id: "secourisme2",        label: "Les gestes qui sauvent",      icone: "🚑", couleur: "#C81620", image: "images/secourisme.svg" },
+    { id: "cybersecurite",      label: "Cybersécurité",                icone: "🔒", couleur: "#005F60", image: "images/cybersecurite.svg" },
+    { id: "cambriolage",        label: "Prévention des cambriolages",  icone: "🛡️", couleur: "#004D4E", image: "images/cambriolage.svg" },
+    { id: "cambriolage2",       label: "Prévention des cambriolages",  icone: "🛡️", couleur: "#004D4E", image: "images/cambriolage.svg" },
+    { id: "informatique",       label: "Informatique",                 icone: "💻", couleur: "#007173", image: "images/informatique.svg" },
+    { id: "informatique2",      label: "Informatique",                 icone: "💻", couleur: "#007173", image: "images/informatique.svg" },
+    { id: "succession",         label: "Transmission du patrimoine",   icone: "📜", couleur: "#00291C", image: "images/succession.svg" },
+    { id: "agriculture",        label: "Agriculture",                  icone: "🌾", couleur: "#1F6E4A", image: "images/agriculture.svg" },
+    { id: "sante-viellir",      label: "Bien vieillir & santé",        icone: "💚", couleur: "#A1273A", image: "images/sante-viellir.svg" },
+    { id: "securite-montagne",  label: "Sécurité en montagne",         icone: "⛰️", couleur: "#164A36", image: "images/securite-montagne.svg" },
+    { id: "securite-routiere",  label: "Sécurité routière",            icone: "🚦", couleur: "#C81620", image: "images/securite-routiere.svg" },
+    { id: "default",            label: "Autre thème",                  icone: "⭐", couleur: "#003D2B", image: "images/autre.svg" }
+  ];
+
+  // Laisser vide : les chiffres clés sont calculés automatiquement à partir
+  // des événements réels (voir renderStats() plus bas).
+  const RDV_STATS = {};
+
+  const PAST_PAGE_SIZE = 5;
+  let pastPage = 0;
+  let RDV_EVENTS = [];
+
+  const themeById = Object.fromEntries(RDV_THEMES.map((t) => [t.id, t]));
+
+  function getTheme(event) {
+    return themeById[event.theme] || RDV_THEMES[RDV_THEMES.length - 1];
+  }
+
+  /** Enlève les accents et met en minuscules, pour des comparaisons robustes. */
+  function normalize(str) {
+    return String(str || "").normalize("NFD").replace(/[\\u0300-\\u036f]/g, "").toLowerCase().trim();
+  }
+
+  const MOIS_FR = {
+    janvier: 0, fevrier: 1, mars: 2, avril: 3, mai: 4, juin: 5,
+    juillet: 6, aout: 7, septembre: 8, octobre: 9, novembre: 10, decembre: 11
+  };
+
+  /** Convertit "Jeudi 12 septembre 2024" en objet Date (pour trier/comparer). */
+  function parseFrenchDate(str) {
+    const m = normalize(str).match(/(\\d{1,2})\\s+([a-z]+)\\s+(\\d{4})/);
+    if (!m) return null;
+    const month = MOIS_FR[m[2]];
+    if (month === undefined) return null;
+    return new Date(Number(m[3]), month, Number(m[1]));
+  }
+
+  /* ---------------------------------------------------------------
+     Lecture du XML métier (voir data/RDVCitoyens.xml / RDV_XML)
+  --------------------------------------------------------------- */
+  function parseEvenementsXML(xmlText) {
+    const doc = new DOMParser().parseFromString(xmlText, "application/xml");
+    if (doc.querySelector("parsererror")) {
+      console.error("XML des événements invalide.");
+      return [];
+    }
+    const get = (node, tag) => {
+      const el = node.getElementsByTagName(tag)[0];
+      return el ? el.textContent.trim() : "";
+    };
+    return Array.from(doc.getElementsByTagName("Evenement")).map((node) => ({
+      id: get(node, "id"),
+      dateEvenement: get(node, "Date_Evenement"),
+      titre: get(node, "Titre"),
+      localisation: get(node, "Localisation"),
+      theme: get(node, "Theme"),
+      statut: get(node, "Statut"),
+      intervenant: get(node, "Intervenant"),
+      horaireGen: get(node, "HoraireGen"),
+      horaireCocktail: get(node, "HoraireCocktail"),
+      horaireConf: get(node, "HoraireConf"),
+      lieu: get(node, "Lieu"),
+      adresse: get(node, "Adresse"),
+      cp: get(node, "Cp"),
+      nombreInscrit: Number(get(node, "NombreInscrit")) || 0,
+      nombrePlaceMax: Number(get(node, "NombrePlaceMax")) || 0,
+      description: get(node, "Description"),
+      communesConcernees: get(node, "Communes_Concernees"),
+      detailEvenement: get(node, "detail-evenement"),
+      codeCaisse: get(node, "Code_caisse"),
+      libelleCaisse: get(node, "Libelle_caisse"),
+      image: get(node, "Image"),
+      sortDate: parseFrenchDate(get(node, "Date_Evenement"))
+    }));
+  }
+
+  /** Détermine si un événement est "à venir" ou "terminé" à partir du <Statut>. */
+  function isUpcoming(event) {
+    const s = normalize(event.statut);
+    if (s.includes("termine")) return false;
+    if (s.includes("venir") || s.includes("cours")) return true;
+    if (event.sortDate) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      return event.sortDate >= today;
+    }
+    return false;
+  }
+
+  function placesDisponibles(event) {
+    return Math.max(event.nombrePlaceMax - event.nombreInscrit, 0);
+  }
+
+  /** Lien officiel d'inscription sur le site institutionnel (identique à l'ancienne page). */
+  function inscriptionUrl(event) {
+    return \`https://www.credit-agricole.fr/ca-toulouse31/particulier/Rendez_vous_Citoyens.html?PROV=\${encodeURIComponent(event.id)}\`;
+  }
+
+  /** Détermine le libellé/la classe du badge affiché sur une carte ou la modale. */
+  function badgeInfo(event, upcoming, places) {
+    if (!upcoming) return { label: "Terminé", cls: "badge-done" };
+    if (places <= 0) return { label: "Complet", cls: "badge-complet" };
+    if (places <= 10) return { label: "Peu de places", cls: "badge-limite" };
+    return { label: "À venir", cls: "" };
+  }
+
+  function mediaHtml(event, theme) {
+    // Priorité : image propre à l'événement > image par défaut de la thématique > icône.
+    const src = event.image || theme.image;
+    if (src) {
+      return \`<img src="\${escapeAttr(src)}" alt="\${escapeAttr(event.titre)}">\`;
+    }
+    return theme.icone;
+  }
+
+  function escapeHtml(str) {
+    return String(str ?? "").replace(/[&<>"']/g, (c) => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[c]));
+  }
+  function escapeAttr(str) { return escapeHtml(str); }
+
+  /* ---------------------------------------------------------------
+     Cartes "à venir"
+  --------------------------------------------------------------- */
+  function renderUpcoming() {
+    const container = document.getElementById("upcoming-grid");
+    const events = RDV_EVENTS.filter(isUpcoming).sort((a, b) => (a.sortDate || 0) - (b.sortDate || 0));
+
+    if (events.length === 0) {
+      container.innerHTML = \`<p style="color:var(--grey-text)">Aucun événement à venir pour le moment.</p>\`;
+      return;
+    }
+
+    container.innerHTML = events.map((ev) => cardHtml(ev, true)).join("");
+    bindCardButtons(container);
+  }
+
+  /* ---------------------------------------------------------------
+     Cartes "passés" (avec pagination)
+  --------------------------------------------------------------- */
+  function renderPast() {
+    const container = document.getElementById("past-grid");
+    const events = RDV_EVENTS.filter((e) => !isUpcoming(e)).sort((a, b) => (b.sortDate || 0) - (a.sortDate || 0));
+    const totalPages = Math.max(Math.ceil(events.length / PAST_PAGE_SIZE), 1);
+    pastPage = Math.min(pastPage, totalPages - 1);
+
+    const start = pastPage * PAST_PAGE_SIZE;
+    const pageEvents = events.slice(start, start + PAST_PAGE_SIZE);
+
+    if (pageEvents.length === 0) {
+      container.innerHTML = \`<p style="color:var(--grey-text)">Aucun événement passé pour le moment.</p>\`;
+    } else {
+      container.innerHTML = pageEvents.map((ev) => cardHtml(ev, false)).join("");
+      bindCardButtons(container);
+    }
+
+    document.getElementById("past-prev").disabled = pastPage === 0;
+    document.getElementById("past-next").disabled = pastPage >= totalPages - 1;
+    document.getElementById("past-page-indicator").textContent = \`Page \${pastPage + 1} / \${totalPages}\`;
+  }
+
+  function cardHtml(ev, upcoming) {
+    const theme = getTheme(ev);
+    const places = placesDisponibles(ev);
+    const badge = badgeInfo(ev, upcoming, places);
+    const canInscrire = upcoming && places > 0;
+    return \`
+      <div class="card" data-id="\${escapeAttr(ev.id)}">
+        <div class="card-media" style="background:\${theme.couleur}">
+          \${mediaHtml(ev, theme)}
+          <span class="badge \${badge.cls}">\${badge.label}</span>
+        </div>
+        <div class="card-body">
+          <span class="card-location">\${escapeHtml(ev.localisation || "")}</span>
+          <h3 class="card-title">\${escapeHtml(ev.titre)}</h3>
+          <span class="card-date">\${escapeHtml(ev.dateEvenement)}</span>
+          \${upcoming ? \`<span class="card-places">\${places} place\${places > 1 ? "s" : ""} disponible\${places > 1 ? "s" : ""}</span>\` : ""}
+          <div class="card-actions">
+            \${canInscrire ? \`<a class="btn btn-primary btn-small" href="\${escapeAttr(inscriptionUrl(ev))}">S'inscrire</a>\` : ""}
+            <button class="btn btn-outline btn-small btn-details" data-id="\${escapeAttr(ev.id)}">En savoir plus</button>
+          </div>
+        </div>
+      </div>\`;
+  }
+
+  function bindCardButtons(container) {
+    container.querySelectorAll(".btn-details").forEach((btn) => {
+      btn.addEventListener("click", () => openModal(btn.dataset.id));
+    });
+  }
+
+  /* ---------------------------------------------------------------
+     Modale de détail
+  --------------------------------------------------------------- */
+  function openModal(id) {
+    const ev = RDV_EVENTS.find((e) => e.id === id);
+    if (!ev) return;
+    const theme = getTheme(ev);
+    const upcoming = isUpcoming(ev);
+    const places = placesDisponibles(ev);
+    const badge = badgeInfo(ev, upcoming, places);
+
+    const overlay = document.getElementById("modal-overlay");
+
+    document.getElementById("modal-media").innerHTML = mediaHtml(ev, theme);
+    document.getElementById("modal-media").style.background = theme.couleur;
+    document.getElementById("modal-badge").textContent = badge.label;
+    document.getElementById("modal-badge").className = "badge" + (badge.cls ? " " + badge.cls : "");
+
+    document.getElementById("modal-theme-label").textContent = theme.label;
+    document.getElementById("modal-title").textContent = \`« \${ev.titre} »\`;
+
+    const presenceEl = document.getElementById("modal-presence");
+    if (ev.intervenant) {
+      presenceEl.innerHTML = \`Intervenant(s) : <strong>\${escapeHtml(ev.intervenant)}</strong>\`;
+      presenceEl.style.display = "";
+    } else {
+      presenceEl.style.display = "none";
+    }
+
+    document.getElementById("modal-infos").innerHTML = \`
+      <p>\${escapeHtml(ev.dateEvenement)}</p>
+      <p>Conférence à \${escapeHtml(ev.horaireConf || "-")}\${ev.horaireCocktail ? \`, suivie d'un cocktail à \${escapeHtml(ev.horaireCocktail)}\` : ""}</p>
+      \${ev.lieu ? \`<p>\${escapeHtml(ev.lieu)}</p>\` : ""}
+      \${ev.adresse ? \`<p>\${escapeHtml(ev.adresse)}</p>\` : ""}
+      \${ev.cp ? \`<p>\${escapeHtml(ev.cp)}</p>\` : ""}
+    \`;
+
+    const placesEl = document.getElementById("modal-places");
+    if (upcoming) {
+      placesEl.textContent = \`Places disponibles : \${places}\`;
+      placesEl.style.display = "";
+    } else {
+      placesEl.style.display = "none";
+    }
+
+    document.getElementById("modal-desc").innerHTML = ev.description
+      ? \`<strong>Description :</strong> \${escapeHtml(ev.description)}\`
+      : "";
+
+    const communes = ev.communesConcernees ? ev.communesConcernees.split("_").map((c) => c.trim()).filter(Boolean) : [];
+    const communesWrap = document.getElementById("modal-communes");
+    if (communes.length) {
+      communesWrap.style.display = "";
+      communesWrap.querySelector("summary").textContent = \`Communes concernées (\${communes.length})\`;
+      communesWrap.querySelector(".communes-list").textContent = communes.join(", ");
+    } else {
+      communesWrap.style.display = "none";
+    }
+
+    const inscrireBtn = document.getElementById("modal-inscrire");
+    if (upcoming && places > 0) {
+      inscrireBtn.style.display = "";
+      inscrireBtn.href = inscriptionUrl(ev);
+    } else {
+      inscrireBtn.style.display = "none";
+      inscrireBtn.removeAttribute("href");
+    }
+
+    overlay.classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeModal() {
+    document.getElementById("modal-overlay").classList.remove("open");
+    document.body.style.overflow = "";
+  }
+
+  /* ---------------------------------------------------------------
+     Statistiques
+  --------------------------------------------------------------- */
+  function renderStats() {
+    const nbEvenements = RDV_STATS.totalEvenements ?? RDV_EVENTS.length;
+    const nbParticipants = RDV_STATS.totalParticipants ?? RDV_EVENTS.reduce((sum, e) => sum + (Number(e.nombreInscrit) || 0), 0);
+    const intervenantsUniques = new Set(RDV_EVENTS.map((e) => e.intervenant).filter(Boolean));
+    const nbIntervenants = RDV_STATS.totalIntervenants ?? intervenantsUniques.size;
+    const themesUniques = new Set(RDV_EVENTS.map((e) => e.theme).filter(Boolean));
+    const nbThemes = RDV_STATS.totalThemes ?? themesUniques.size;
+
+    document.getElementById("stat-evenements").textContent = nbEvenements;
+    document.getElementById("stat-participants").textContent = nbParticipants.toLocaleString("fr-FR");
+    document.getElementById("stat-intervenants").textContent = nbIntervenants;
+    document.getElementById("stat-themes").textContent = nbThemes;
+
+    // Mêmes chiffres, repris en version compacte dans le bandeau d'en-tête (hero).
+    const heroEv = document.getElementById("hero-stat-evenements");
+    const heroPart = document.getElementById("hero-stat-participants");
+    const heroThemes = document.getElementById("hero-stat-themes");
+    if (heroEv) heroEv.textContent = nbEvenements;
+    if (heroPart) heroPart.textContent = nbParticipants.toLocaleString("fr-FR");
+    if (heroThemes) heroThemes.textContent = nbThemes;
+  }
+
+  /* ---------------------------------------------------------------
+     Récupération du XML métier : ce fichier (composant COLI n°1) NE
+     CONTIENT PAS les données événements. Elles doivent se trouver
+     ailleurs sur la MÊME page AEM, dans un second composant COLI dont
+     le contenu est exactement celui du fichier coli-2-donnees.html
+     (une balise portant l'identifiant rdv-citoyens-xml-data). On va
+     la chercher dans le DOM de la page au chargement, peu importe
+     l'ordre des composants.
+  --------------------------------------------------------------- */
+  function resolveRdvXml() {
+    const el = document.getElementById("rdv-citoyens-xml-data");
+    if (el && el.textContent.trim()) return el.textContent;
+    console.error("Rendez-vous Citoyens : aucune donnée XML trouvée (#rdv-citoyens-xml-data manquant).");
+    return "<Evenements></Evenements>";
+  }
+
+  /* ---------------------------------------------------------------
+     Init
+  --------------------------------------------------------------- */
+  function init() {
+    RDV_EVENTS = parseEvenementsXML(resolveRdvXml());
+    renderUpcoming();
+    renderPast();
+    renderStats();
+
+    document.getElementById("past-prev").addEventListener("click", () => { pastPage--; renderPast(); });
+    document.getElementById("past-next").addEventListener("click", () => { pastPage++; renderPast(); });
+
+    document.getElementById("modal-close").addEventListener("click", closeModal);
+    document.getElementById("modal-overlay").addEventListener("click", (e) => {
+      if (e.target.id === "modal-overlay") closeModal();
+    });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
+  }
+
+  document.addEventListener("DOMContentLoaded", init);
+})();
+<\/script>
+
+</body>
+</html>
+`;
+
+</script>
+
+<script>
+/* =====================================================================
+   ÉDITEUR — RENDEZ-VOUS CITOYENS (fichier unique, tout-en-un)
+   Permet de modifier les événements (format XML officiel du Crédit
+   Agricole Toulouse 31), puis d'exporter/copier :
+     - le fichier RDVCitoyens.xml lui-même (format métier d'origine —
+       ce nom de fichier ne doit jamais être changé)
+     - le bloc de données prêt à coller dans le composant COLI n°2
+       d'une page AEM (fichier coli-2-donnees.html)
+   ===================================================================== */
+
+(function () {
+  "use strict";
+
+  const DRAFT_KEY = "rdvCitoyensDraft_v3";
+
+  /* ---------------------------------------------------------------
+     Utilitaires partagés avec la page (mêmes règles que coli-1-page.html)
+  --------------------------------------------------------------- */
+  function normalize(str) {
+    return String(str || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+  }
+
+  const MOIS_FR = ["janvier","fevrier","mars","avril","mai","juin","juillet","aout","septembre","octobre","novembre","decembre"];
+  const MOIS_FR_ACCENT = ["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
+  const JOURS_FR = ["dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"];
+
+  function parseFrenchDate(str) {
+    const m = normalize(str).match(/(\d{1,2})\s+([a-z]+)\s+(\d{4})/);
+    if (!m) return null;
+    const month = MOIS_FR.indexOf(m[2]);
+    if (month === -1) return null;
+    return new Date(Number(m[3]), month, Number(m[1]));
+  }
+
+  function isUpcoming(ev) {
+    const s = normalize(ev.statut);
+    if (s.includes("termine")) return false;
+    if (s.includes("venir") || s.includes("cours")) return true;
+    const d = parseFrenchDate(ev.dateEvenement);
+    if (d) {
+      const today = new Date(); today.setHours(0, 0, 0, 0);
+      return d >= today;
+    }
+    return false;
+  }
+
+  function escapeHtml(str) {
+    return String(str ?? "").replace(/[&<>"']/g, (c) => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+  }
+  function escapeXml(str) {
+    return String(str ?? "").replace(/[&<>]/g, (c) => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;" }[c]));
+  }
+
+  /* ---------------------------------------------------------------
+     Lecture du XML métier -> tableau d'événements (mêmes champs que
+     dans coli-1-page.html)
+  --------------------------------------------------------------- */
+  const EVENT_TAGS = [
+    ["id", "id"],
+    ["dateEvenement", "Date_Evenement"],
+    ["titre", "Titre"],
+    ["localisation", "Localisation"],
+    ["theme", "Theme"],
+    ["statut", "Statut"],
+    ["intervenant", "Intervenant"],
+    ["horaireGen", "HoraireGen"],
+    ["horaireCocktail", "HoraireCocktail"],
+    ["horaireConf", "HoraireConf"],
+    ["lieu", "Lieu"],
+    ["adresse", "Adresse"],
+    ["cp", "Cp"],
+    ["nombreInscrit", "NombreInscrit"],
+    ["nombrePlaceMax", "NombrePlaceMax"],
+    ["description", "Description"],
+    ["communesConcernees", "Communes_Concernees"],
+    ["detailEvenement", "detail-evenement"],
+    ["codeCaisse", "Code_caisse"],
+    ["libelleCaisse", "Libelle_caisse"],
+    ["dateEnvoiEmail", "Date_envoi_email"],
+    ["dateEnvoiSmsJ15", "Date_envoi_sms_J15"],
+    ["dateEnvoiSmsJ2", "Date_envoi_sms_J2"],
+    ["image", "Image"]
+  ];
+  const NUMERIC_FIELDS = new Set(["nombreInscrit", "nombrePlaceMax"]);
+
+  function parseEvenementsXML(xmlText) {
+    const doc = new DOMParser().parseFromString(xmlText, "application/xml");
+    if (doc.querySelector("parsererror")) throw new Error("XML invalide (vérifiez que toutes les balises sont bien fermées).");
+    const get = (node, tag) => {
+      const el = node.getElementsByTagName(tag)[0];
+      return el ? el.textContent.trim() : "";
+    };
+    const nodes = Array.from(doc.getElementsByTagName("Evenement"));
+    if (!nodes.length) throw new Error("Aucune balise <Evenement> trouvée dans ce fichier.");
+    return nodes.map((node) => {
+      const ev = {};
+      EVENT_TAGS.forEach(([key, tag]) => {
+        const raw = get(node, tag);
+        ev[key] = NUMERIC_FIELDS.has(key) ? (Number(raw) || 0) : raw;
+      });
+      return ev;
+    });
+  }
+
+  /** En-tête XML d'origine (commentaire listant les thématiques possibles) — conservé tel quel. */
+  const XML_HEADER_COMMENT = `<!--
+Voici les themes possible :
+agriculture,
+secourisme,
+informatique,
+cambriolage,
+cambriolage2,
+cybersecurite,
+informatique2,
+sante-viellir,
+secourisme2,
+securite-montagne,
+securite-routiere,
+succession,
+secourisme2
+-->`;
+
+  function buildEvenementsXML(events) {
+    const blocks = events.map((ev) => {
+      const lines = EVENT_TAGS
+        // "Image" est un ajout optionnel (non présent dans le XML d'origine) : on ne
+        // l'écrit que si elle est réellement utilisée, pour ne pas changer le schéma
+        // des événements qui ne s'en servent pas.
+        .filter(([key]) => key !== "image" || ev.image)
+        .map(([key, tag]) => `\t\t<${tag}>${escapeXml(ev[key] ?? "")}</${tag}>`);
+      return `\t<Evenement>\n${lines.join("\n")}\n\t</Evenement>`;
+    });
+    return `${XML_HEADER_COMMENT}\n\n<Evenements>\n${blocks.join("\n\n")}\n</Evenements>\n`;
+  }
+
+  /** Enveloppe le XML courant dans le bloc à coller tel quel dans le fichier
+   *  coli-2-donnees.html / le composant COLI n°2 sur AEM — voir #rdv-citoyens-xml-data. */
+  function buildDataBlock(xmlText) {
+    return `<script type="application/xml" id="rdv-citoyens-xml-data">\n${xmlText}\n<\/script>`;
+  }
+
+  /** Lit un fichier image, le redimensionne (largeur max) et renvoie un data URL JPEG léger. */
+  function fileToOptimizedDataUrl(file, maxWidth) {
+    maxWidth = maxWidth || 900;
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onerror = () => reject(new Error("Lecture du fichier impossible"));
+      reader.onload = () => {
+        const img = new Image();
+        img.onerror = () => reject(new Error("Image illisible"));
+        img.onload = () => {
+          const scale = Math.min(1, maxWidth / img.width);
+          const w = Math.round(img.width * scale);
+          const h = Math.round(img.height * scale);
+          const canvas = document.createElement("canvas");
+          canvas.width = w; canvas.height = h;
+          canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+          resolve(canvas.toDataURL("image/jpeg", 0.82));
+        };
+        img.src = String(reader.result);
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  /* ---------------------------------------------------------------
+     État en mémoire
+  --------------------------------------------------------------- */
+  let state = {
+    themes: JSON.parse(JSON.stringify(RDV_THEMES)),
+    stats: JSON.parse(JSON.stringify(RDV_STATS)),
+    events: parseEvenementsXML(RDV_XML),
+    statsAuto: { totalEvenements: true, totalParticipants: true, totalIntervenants: true, totalThemes: true }
+  };
+
+  function toast(msg) {
+    const el = document.getElementById("toast");
+    el.textContent = msg;
+    el.classList.add("show");
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => el.classList.remove("show"), 2200);
+  }
+
+  function saveDraft() {
+    try { localStorage.setItem(DRAFT_KEY, JSON.stringify(state)); } catch (e) { /* stockage indisponible, tant pis */ }
+  }
+
+  /* ---------------------------------------------------------------
+     Onglets
+  --------------------------------------------------------------- */
+  document.querySelectorAll(".tab-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".tab-btn").forEach((b) => b.classList.remove("active"));
+      document.querySelectorAll(".tab-panel").forEach((p) => p.classList.remove("active"));
+      btn.classList.add("active");
+      document.getElementById("tab-" + btn.dataset.tab).classList.add("active");
+      if (btn.dataset.tab === "export") renderExportPreview();
+    });
+  });
+
+  /* ---------------------------------------------------------------
+     Liste des événements
+  --------------------------------------------------------------- */
+  function themeOf(id) { return state.themes.find((t) => t.id === id) || state.themes[state.themes.length - 1]; }
+
+  function renderEventList() {
+    const wrap = document.getElementById("event-list");
+    const query = document.getElementById("event-search").value.trim().toLowerCase();
+    const events = state.events
+      .filter((e) => !query || (e.titre + " " + e.localisation + " " + (themeOf(e.theme)?.label || "")).toLowerCase().includes(query))
+      .slice()
+      .sort((a, b) => {
+        const da = parseFrenchDate(a.dateEvenement), db = parseFrenchDate(b.dateEvenement);
+        return (db ? db.getTime() : 0) - (da ? da.getTime() : 0);
+      });
+
+    if (events.length === 0) {
+      wrap.innerHTML = `<div class="empty-state">Aucun événement. Cliquez sur « + Nouvel événement » pour commencer.</div>`;
+      return;
+    }
+
+    wrap.innerHTML = events.map((ev) => {
+      const theme = themeOf(ev.theme);
+      const upcoming = isUpcoming(ev);
+      return `
+        <div class="event-row" data-id="${escapeHtml(ev.id)}">
+          <span class="badge-dot" style="background:${theme.couleur}"></span>
+          <div class="info">
+            <div class="t">${escapeHtml(ev.titre)}</div>
+            <div class="m">${escapeHtml(ev.localisation || "—")} · ${escapeHtml(ev.dateEvenement)}</div>
+          </div>
+          <span class="status-pill ${upcoming ? "status-a_venir" : "status-termine"}">${upcoming ? "À venir" : "Terminé"}</span>
+          <div class="actions">
+            <button class="btn btn-outline btn-small act-edit" data-id="${escapeHtml(ev.id)}">Modifier</button>
+            <button class="btn btn-outline btn-small act-dup" data-id="${escapeHtml(ev.id)}">Dupliquer</button>
+            <button class="btn btn-danger btn-small act-del" data-id="${escapeHtml(ev.id)}">Supprimer</button>
+          </div>
+        </div>`;
+    }).join("");
+
+    wrap.querySelectorAll(".act-edit").forEach((b) => b.addEventListener("click", () => openForm(b.dataset.id)));
+    wrap.querySelectorAll(".act-dup").forEach((b) => b.addEventListener("click", () => duplicateEvent(b.dataset.id)));
+    wrap.querySelectorAll(".act-del").forEach((b) => b.addEventListener("click", () => deleteEvent(b.dataset.id)));
+  }
+
+  document.getElementById("event-search").addEventListener("input", renderEventList);
+
+  function duplicateEvent(id) {
+    const ev = state.events.find((e) => e.id === id);
+    if (!ev) return;
+    const clone = JSON.parse(JSON.stringify(ev));
+    clone.id = uniqueId(ev.id + "-copie");
+    clone.titre = ev.titre + " (copie)";
+    state.events.push(clone);
+    renderEventList(); saveDraft();
+    toast("Événement dupliqué");
+  }
+
+  function deleteEvent(id) {
+    const ev = state.events.find((e) => e.id === id);
+    if (!ev) return;
+    if (!confirm(`Supprimer l'événement « ${ev.titre} » ?`)) return;
+    state.events = state.events.filter((e) => e.id !== id);
+    renderEventList(); saveDraft();
+    toast("Événement supprimé");
+  }
+
+  function uniqueId(base) {
+    let id = base, n = 1;
+    while (state.events.some((e) => e.id === id)) { id = base + "-" + (++n); }
+    return id;
+  }
+
+  /* ---------------------------------------------------------------
+     Formulaire (ajout / modification)
+  --------------------------------------------------------------- */
+  const modal = document.getElementById("event-modal");
+  const form = document.getElementById("event-form");
+
+  function fillThemeSelect() {
+    const sel = document.getElementById("ev-theme");
+    sel.innerHTML = `<option value="">— Aucune (thème par défaut) —</option>` +
+      state.themes.map((t) => `<option value="${escapeHtml(t.id)}">${t.icone} ${escapeHtml(t.label)}</option>`).join("");
+  }
+
+  function openForm(id) {
+    fillThemeSelect();
+    form.reset();
+    clearInvalid();
+    const editing = id ? state.events.find((e) => e.id === id) : null;
+    document.getElementById("modal-title-text").textContent = editing ? "Modifier l'événement" : "Nouvel événement";
+    document.getElementById("ev-editing-id").value = editing ? editing.id : "";
+
+    const f = (fieldId, value) => { document.getElementById(fieldId).value = value ?? ""; };
+    f("ev-titre", editing?.titre);
+    f("ev-theme", editing?.theme || "");
+    f("ev-statut", editing?.statut || "Terminé");
+    f("ev-dateEvenement", editing?.dateEvenement);
+    f("ev-date-helper", "");
+    f("ev-horaireGen", editing?.horaireGen);
+    f("ev-horaireConf", editing?.horaireConf);
+    f("ev-horaireCocktail", editing?.horaireCocktail);
+    f("ev-localisation", editing?.localisation);
+    f("ev-lieu", editing?.lieu);
+    f("ev-adresse", editing?.adresse);
+    f("ev-cp", editing?.cp);
+    f("ev-intervenant", editing?.intervenant);
+    f("ev-nombreInscrit", editing?.nombreInscrit ?? 0);
+    f("ev-nombrePlaceMax", editing?.nombrePlaceMax ?? 0);
+    f("ev-description", editing?.description);
+    f("ev-detailEvenement", editing?.detailEvenement);
+    f("ev-communes", (editing?.communesConcernees || "").split("_").map((s) => s.trim()).filter(Boolean).join(", "));
+    f("ev-codeCaisse", editing?.codeCaisse);
+    f("ev-libelleCaisse", editing?.libelleCaisse);
+    f("ev-dateEnvoiEmail", editing?.dateEnvoiEmail);
+    f("ev-dateEnvoiSmsJ15", editing?.dateEnvoiSmsJ15);
+    f("ev-dateEnvoiSmsJ2", editing?.dateEnvoiSmsJ2);
+    f("ev-image", editing?.image);
+    updateEvImagePreview();
+
+    modal.classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+
+  /** Met à jour la miniature d'aperçu : image propre à l'événement, sinon image de la thématique choisie. */
+  function updateEvImagePreview() {
+    const customUrl = document.getElementById("ev-image").value.trim();
+    const theme = themeOf(document.getElementById("ev-theme").value);
+    const src = customUrl || theme?.image;
+    const thumb = document.getElementById("ev-image-preview");
+    const label = document.getElementById("ev-image-preview-label");
+    if (src) {
+      thumb.innerHTML = `<img src="${src}" alt="">`;
+    } else {
+      thumb.textContent = theme?.icone || "🖼️";
+    }
+    label.innerHTML = customUrl
+      ? "<strong>Image spécifique</strong> à cet événement."
+      : `Aucune photo propre à l'événement : l'image par défaut de la thématique <strong>${escapeHtml(theme?.label || "")}</strong> sera utilisée.`;
+  }
+  document.getElementById("ev-image").addEventListener("input", updateEvImagePreview);
+  document.getElementById("ev-theme").addEventListener("change", updateEvImagePreview);
+  document.getElementById("btn-clear-ev-image").addEventListener("click", () => {
+    document.getElementById("ev-image").value = "";
+    updateEvImagePreview();
+  });
+  document.getElementById("btn-upload-ev-image").addEventListener("click", () => document.getElementById("file-ev-image").click());
+  document.getElementById("file-ev-image").addEventListener("change", async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    try {
+      const dataUrl = await fileToOptimizedDataUrl(file, 1000);
+      document.getElementById("ev-image").value = dataUrl;
+      updateEvImagePreview();
+      toast("Photo ajoutée");
+    } catch (err) {
+      toast("Impossible de lire cette image");
+    }
+    e.target.value = "";
+  });
+
+  function closeForm() {
+    modal.classList.remove("open");
+    document.body.style.overflow = "";
+  }
+
+  document.getElementById("btn-add-event").addEventListener("click", () => openForm(null));
+  document.getElementById("modal-cancel").addEventListener("click", closeForm);
+  document.getElementById("btn-cancel-form").addEventListener("click", closeForm);
+  modal.addEventListener("click", (e) => { if (e.target === modal) closeForm(); });
+
+  document.getElementById("btn-gen-date").addEventListener("click", () => {
+    const iso = document.getElementById("ev-date-helper").value;
+    if (!iso) { toast("Choisissez d'abord une date avec le sélecteur"); return; }
+    const d = new Date(iso + "T00:00:00");
+    const label = `${capitalize(JOURS_FR[d.getDay()])} ${d.getDate()} ${MOIS_FR_ACCENT[d.getMonth()]} ${d.getFullYear()}`;
+    document.getElementById("ev-dateEvenement").value = label;
+  });
+  function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+  function clearInvalid() {
+    document.querySelectorAll(".field.invalid").forEach((f) => f.classList.remove("invalid"));
+  }
+
+  document.getElementById("btn-save-event").addEventListener("click", () => {
+    clearInvalid();
+    const val = (id) => document.getElementById(id).value.trim();
+    const titre = val("ev-titre");
+    const dateEvenement = val("ev-dateEvenement");
+    const localisation = val("ev-localisation");
+
+    let hasError = false;
+    if (!titre) { document.getElementById("field-titre").classList.add("invalid"); hasError = true; }
+    if (!dateEvenement) { hasError = true; toast("La date de l'événement est obligatoire"); }
+    if (!localisation) { document.getElementById("field-localisation").classList.add("invalid"); hasError = true; }
+    if (hasError) { if (!dateEvenement) return; toast("Merci de compléter les champs obligatoires (*)"); return; }
+
+    const editingId = document.getElementById("ev-editing-id").value;
+    const communes = val("ev-communes").split(",").map((s) => s.trim()).filter(Boolean).join("_");
+
+    const data = {
+      id: editingId || uniqueId(slugify(titre)),
+      dateEvenement,
+      titre,
+      localisation,
+      theme: document.getElementById("ev-theme").value,
+      statut: val("ev-statut") || "Terminé",
+      intervenant: val("ev-intervenant"),
+      horaireGen: val("ev-horaireGen"),
+      horaireCocktail: val("ev-horaireCocktail"),
+      horaireConf: val("ev-horaireConf"),
+      lieu: val("ev-lieu"),
+      adresse: val("ev-adresse"),
+      cp: val("ev-cp"),
+      nombreInscrit: Number(val("ev-nombreInscrit")) || 0,
+      nombrePlaceMax: Number(val("ev-nombrePlaceMax")) || 0,
+      description: val("ev-description"),
+      communesConcernees: communes,
+      detailEvenement: val("ev-detailEvenement"),
+      codeCaisse: val("ev-codeCaisse"),
+      libelleCaisse: val("ev-libelleCaisse"),
+      dateEnvoiEmail: val("ev-dateEnvoiEmail"),
+      dateEnvoiSmsJ15: val("ev-dateEnvoiSmsJ15"),
+      dateEnvoiSmsJ2: val("ev-dateEnvoiSmsJ2"),
+      image: val("ev-image")
+    };
+
+    if (editingId) {
+      const idx = state.events.findIndex((e) => e.id === editingId);
+      state.events[idx] = data;
+    } else {
+      state.events.push(data);
+    }
+
+    closeForm();
+    renderEventList();
+    saveDraft();
+    toast(editingId ? "Événement mis à jour" : "Événement ajouté");
+  });
+
+  function slugify(str) {
+    return str.toString().normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "").slice(0, 30) || "evenement";
+  }
+
+  /* ---------------------------------------------------------------
+     Onglet Chiffres clés
+  --------------------------------------------------------------- */
+  const STAT_FIELDS = [
+    { key: "totalEvenements", label: "Nombre d'événements", compute: () => state.events.length },
+    { key: "totalParticipants", label: "Nombre de participants", compute: () => state.events.reduce((s, e) => s + (Number(e.nombreInscrit) || 0), 0) },
+    { key: "totalIntervenants", label: "Nombre d'intervenants", compute: () => new Set(state.events.map((e) => e.intervenant).filter(Boolean)).size },
+    { key: "totalThemes", label: "Nombre de thèmes abordés", compute: () => new Set(state.events.map((e) => e.theme).filter(Boolean)).size }
+  ];
+
+  function renderStatsTab() {
+    const wrap = document.getElementById("stats-rows");
+    wrap.innerHTML = STAT_FIELDS.map((f) => {
+      const auto = state.statsAuto[f.key];
+      const computed = f.compute();
+      const value = auto ? computed : (state.stats[f.key] ?? computed);
+      return `
+        <div class="stat-row">
+          <label>${f.label}</label>
+          <input type="number" id="stat-${f.key}" value="${value}" ${auto ? "disabled" : ""}>
+          <label class="auto-check"><input type="checkbox" id="auto-${f.key}" ${auto ? "checked" : ""}> Auto (calculé)</label>
+          <span class="computed">valeur calculée : ${computed}</span>
+        </div>`;
+    }).join("");
+
+    STAT_FIELDS.forEach((f) => {
+      document.getElementById(`auto-${f.key}`).addEventListener("change", (e) => {
+        state.statsAuto[f.key] = e.target.checked;
+        renderStatsTab(); saveDraft();
+      });
+      document.getElementById(`stat-${f.key}`).addEventListener("input", (e) => {
+        state.stats[f.key] = Number(e.target.value) || 0;
+        saveDraft();
+      });
+    });
+  }
+
+  /* ---------------------------------------------------------------
+     Onglet Thématiques
+  --------------------------------------------------------------- */
+  let themeImageEditingIndex = null;
+
+  function renderThemesTab() {
+    const body = document.getElementById("themes-body");
+    body.innerHTML = state.themes.map((t, i) => `
+      <tr data-i="${i}">
+        <td>
+          <div class="image-cell">
+            <div class="thumb">${t.image ? `<img src="${escapeHtml(t.image)}" alt="">` : escapeHtml(t.icone)}</div>
+            <div class="image-actions">
+              <button type="button" class="btn btn-outline btn-small th-upload">📁 Choisir</button>
+              <button type="button" class="btn btn-outline btn-small th-url">🔗 URL</button>
+              ${t.image ? `<button type="button" class="btn btn-danger btn-small th-clear-img">✕ Retirer</button>` : ""}
+            </div>
+          </div>
+        </td>
+        <td><input type="text" class="th-id" value="${escapeHtml(t.id)}"></td>
+        <td><input type="text" class="th-label" value="${escapeHtml(t.label)}"></td>
+        <td><input type="text" class="th-icon" value="${escapeHtml(t.icone)}" style="width:52px;text-align:center"></td>
+        <td><input type="color" class="th-color" value="${toHexColor(t.couleur)}"></td>
+        <td><button class="btn btn-danger btn-small th-del">✕</button></td>
+      </tr>`).join("");
+
+    body.querySelectorAll("tr").forEach((tr) => {
+      const i = Number(tr.dataset.i);
+      tr.querySelector(".th-id").addEventListener("input", (e) => { state.themes[i].id = e.target.value.trim(); saveDraft(); });
+      tr.querySelector(".th-label").addEventListener("input", (e) => { state.themes[i].label = e.target.value; saveDraft(); renderEventList(); });
+      tr.querySelector(".th-icon").addEventListener("input", (e) => { state.themes[i].icone = e.target.value; saveDraft(); renderThemesTab(); });
+      tr.querySelector(".th-color").addEventListener("input", (e) => { state.themes[i].couleur = e.target.value; saveDraft(); renderEventList(); });
+      tr.querySelector(".th-del").addEventListener("click", () => {
+        if (!confirm("Supprimer cette thématique ?")) return;
+        state.themes.splice(i, 1);
+        renderThemesTab(); saveDraft();
+      });
+      tr.querySelector(".th-upload").addEventListener("click", () => {
+        themeImageEditingIndex = i;
+        document.getElementById("file-theme-image").click();
+      });
+      tr.querySelector(".th-url").addEventListener("click", () => {
+        const url = prompt("URL (ou chemin, ex: images/mon-theme.jpg) de l'image par défaut :", state.themes[i].image || "");
+        if (url === null) return;
+        state.themes[i].image = url.trim();
+        renderThemesTab(); saveDraft();
+      });
+      const clearBtn = tr.querySelector(".th-clear-img");
+      if (clearBtn) clearBtn.addEventListener("click", () => {
+        state.themes[i].image = "";
+        renderThemesTab(); saveDraft();
+      });
+    });
+  }
+
+  document.getElementById("file-theme-image").addEventListener("change", async (e) => {
+    const file = e.target.files[0];
+    if (!file || themeImageEditingIndex === null) return;
+    try {
+      const dataUrl = await fileToOptimizedDataUrl(file, 1000);
+      state.themes[themeImageEditingIndex].image = dataUrl;
+      renderThemesTab(); saveDraft();
+      toast("Image de la thématique mise à jour");
+    } catch (err) {
+      toast("Impossible de lire cette image");
+    }
+    e.target.value = "";
+    themeImageEditingIndex = null;
+  });
+  function toHexColor(c) {
+    if (/^#([0-9a-f]{3}){1,2}$/i.test(c)) return c.length === 4 ? "#" + [...c.slice(1)].map((x) => x + x).join("") : c;
+    return "#003D2B";
+  }
+
+  document.getElementById("btn-add-theme").addEventListener("click", () => {
+    state.themes.push({ id: "nouveau-theme", label: "Nouveau thème", icone: "⭐", couleur: "#003D2B", image: "" });
+    renderThemesTab(); saveDraft();
+  });
+
+  /* ---------------------------------------------------------------
+     Export / téléchargement / copie / import
+  --------------------------------------------------------------- */
+  function currentXml() { return buildEvenementsXML(state.events); }
+
+  function renderExportPreview() {
+    document.getElementById("code-preview").textContent = currentXml();
+  }
+
+  function downloadBlob(content, filename, mime) {
+    const blob = new Blob([content], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  document.getElementById("btn-download").addEventListener("click", () => {
+    downloadBlob(currentXml(), "RDVCitoyens.xml", "application/xml");
+    toast("Fichier RDVCitoyens.xml téléchargé");
+  });
+
+  async function copyText(text, okMsg) {
+    try {
+      await navigator.clipboard.writeText(text);
+      toast(okMsg);
+    } catch (e) {
+      const ta = document.createElement("textarea");
+      ta.value = text; document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); toast(okMsg); }
+      catch (e2) { toast("Impossible de copier automatiquement — utilisez l'aperçu"); }
+      ta.remove();
+    }
+  }
+
+  document.getElementById("btn-copy-coli2").addEventListener("click", () => {
+    copyText(buildDataBlock(currentXml()), "Bloc de données copié — collez-le dans le composant COLI n°2 (coli-2-donnees.html)");
+  });
+
+  /** Recompose une page complète (composant COLI n°1 + les événements
+   *  EN COURS D'ÉDITION ici) et l'ouvre dans un nouvel onglet, pour voir
+   *  le rendu réel avant de publier quoi que ce soit sur AEM. */
+  document.getElementById("btn-preview").addEventListener("click", () => {
+    const dataBlock = buildDataBlock(currentXml());
+    const previewHtml = COLI1_HTML.replace(
+      "</body>\n</html>",
+      `${dataBlock}\n</body>\n</html>`
+    );
+    const blob = new Blob([previewHtml], { type: "text/html" });
+    const url = URL.createObjectURL(blob);
+    window.open(url, "_blank");
+    setTimeout(() => URL.revokeObjectURL(url), 30000);
+  });
+
+  document.getElementById("btn-copy").addEventListener("click", () => {
+    copyText(currentXml(), "XML copié dans le presse-papiers");
+  });
+
+  document.getElementById("btn-import").addEventListener("click", () => document.getElementById("file-import").click());
+  document.getElementById("file-import").addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const events = parseEvenementsXML(String(reader.result));
+        state.events = events;
+        renderAll(); saveDraft();
+        toast("Import réussi : " + state.events.length + " événement(s)");
+      } catch (err) {
+        alert("Fichier XML invalide : " + err.message);
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = "";
+  });
+
+  /* ---------------------------------------------------------------
+     Brouillon (localStorage)
+  --------------------------------------------------------------- */
+  function tryLoadDraft() {
+    let raw;
+    try { raw = localStorage.getItem(DRAFT_KEY); } catch (e) { return; }
+    if (!raw) return;
+    document.getElementById("import-banner").style.display = "flex";
+    document.getElementById("restore-draft").addEventListener("click", () => {
+      try {
+        const draft = JSON.parse(raw);
+        state = Object.assign(state, draft);
+        renderAll();
+        toast("Brouillon restauré");
+      } catch (e) { toast("Le brouillon est corrompu"); }
+      document.getElementById("import-banner").style.display = "none";
+    });
+    document.getElementById("discard-draft").addEventListener("click", () => {
+      try { localStorage.removeItem(DRAFT_KEY); } catch (e) {}
+      document.getElementById("import-banner").style.display = "none";
+    });
+  }
+
+  function renderAll() {
+    renderEventList();
+    renderStatsTab();
+    renderThemesTab();
+    renderExportPreview();
+  }
+
+  renderAll();
+  tryLoadDraft();
+})();
+</script>
 </body>
 </html>
