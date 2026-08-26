@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Éditeur — Rendez-vous Citoyens</title>
+<link rel="stylesheet" href="css/editeur.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-title">
+      <h1>Éditeur des Rendez-vous Citoyens</h1>
+      <p>Ajoutez, modifiez ou supprimez des événements, puis exportez le fichier de données.</p>
+    </div>
+    <a href="index.html" class="btn btn-outline btn-small" target="_blank">Voir la page ↗</a>
+  </div>
+</header>
+
+<div class="container">
+
+  <div id="import-banner" class="import-banner" style="display:none">
+    <span>Un brouillon enregistré dans ce navigateur a été retrouvé.</span>
+    <span>
+      <button class="btn btn-small btn-primary" id="restore-draft">Restaurer</button>
+      <button class="btn btn-small btn-outline" id="discard-draft">Ignorer</button>
+    </span>
+  </div>
+
+  <div class="toolbar">
+    <button class="btn btn-primary" id="btn-add-event">+ Nouvel événement</button>
+    <button class="btn btn-outline" id="btn-import">Importer un fichier XML</button>
+    <input type="file" id="file-import" accept=".xml,text/xml,application/xml" style="display:none">
+    <div class="spacer"></div>
+    <button class="btn btn-outline" id="btn-copy">Copier le XML</button>
+    <button class="btn btn-soft" id="btn-download">⬇ Télécharger le .xml</button>
+    <button class="btn btn-soft" id="btn-download-js">⬇ Télécharger le .js (pour la page)</button>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="events">Événements</button>
+    <button class="tab-btn" data-tab="stats">Chiffres clés</button>
+    <button class="tab-btn" data-tab="themes">Thématiques</button>
+    <button class="tab-btn" data-tab="export">Aperçu du fichier</button>
+  </div>
+
+  <!-- ONGLET ÉVÉNEMENTS -->
+  <div class="tab-panel active" id="tab-events">
+    <div class="panel">
+      <input type="text" class="event-search" id="event-search" placeholder="Rechercher un événement (titre, ville, thème)...">
+      <div id="event-list"></div>
+    </div>
+  </div>
+
+  <!-- ONGLET CHIFFRES CLÉS -->
+  <div class="tab-panel" id="tab-stats">
+    <div class="panel">
+      <h2>Chiffres affichés dans le bandeau « en chiffres »</h2>
+      <p class="hint" style="color:var(--grey-text);font-size:.85rem;margin-top:-8px">Décochez « auto » pour saisir une valeur manuelle (ex : historique cumulé depuis la création du dispositif).</p>
+      <div id="stats-rows"></div>
+    </div>
+  </div>
+
+  <!-- ONGLET THÉMATIQUES -->
+  <div class="tab-panel" id="tab-themes">
+    <div class="panel">
+      <h2>Thématiques disponibles</h2>
+      <p class="hint" style="color:var(--grey-text);font-size:.85rem;margin-top:-8px">L'image de chaque thématique s'affiche automatiquement sur tout événement de ce thème qui n'a pas sa propre photo.</p>
+      <table class="themes-table">
+        <thead><tr><th>Image</th><th>Identifiant</th><th>Libellé</th><th>Icône</th><th>Couleur</th><th></th></tr></thead>
+        <tbody id="themes-body"></tbody>
+      </table>
+      <input type="file" id="file-theme-image" accept="image/*" style="display:none">
+      <button class="btn btn-outline btn-small" id="btn-add-theme" style="margin-top:14px">+ Ajouter une thématique</button>
+    </div>
+  </div>
+
+  <!-- ONGLET APERÇU / EXPORT -->
+  <div class="tab-panel" id="tab-export">
+    <div class="panel">
+      <h2>Aperçu du fichier <code>data/RDVCitoyens.xml</code></h2>
+      <p style="color:var(--grey-text);font-size:.85rem;margin-top:-8px">Ce texte se met à jour automatiquement et respecte le format XML d'origine. Copiez-le ou téléchargez les fichiers avec les boutons en haut de page — <strong>téléchargez les deux</strong> (.xml et .js) et remplacez-les dans le dossier <code>data/</code> du site.</p>
+      <pre class="code-preview" id="code-preview"></pre>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODALE FORMULAIRE ÉVÉNEMENT -->
+<div class="modal-overlay" id="event-modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h2 id="modal-title-text">Nouvel événement</h2>
+      <button class="btn btn-outline btn-small" id="modal-cancel">Fermer</button>
+    </div>
+    <div class="modal-content">
+      <form id="event-form">
+        <fieldset>
+          <legend>Informations générales</legend>
+          <div class="form-grid">
+            <div class="field full" id="field-titre">
+              <label>Titre de l'événement *</label>
+              <input type="text" id="ev-titre" placeholder="Ex : Les gestes qui sauvent">
+            </div>
+            <div class="field">
+              <label>Thématique</label>
+              <select id="ev-theme"></select>
+            </div>
+            <div class="field">
+              <label>Statut *</label>
+              <input type="text" id="ev-statut" list="statut-options" placeholder="Terminé">
+              <datalist id="statut-options">
+                <option value="Terminé">
+                <option value="En cours">
+              </datalist>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Date &amp; horaires</legend>
+          <p class="hint" style="margin:0 0 10px">Le format de la date doit rester « Jour DD Mois AAAA » (ex : Jeudi 11 juin 2026) pour que le tri et la détection « à venir / terminé » fonctionnent.</p>
+          <div class="form-grid cols-3">
+            <div class="field full">
+              <label>Date affichée sur la page * <input type="date" id="ev-date-helper" style="margin-left:8px;width:auto;display:inline-block"> <button type="button" class="btn btn-outline btn-small" id="btn-gen-date" style="margin-left:4px;padding:3px 10px;font-size:.65rem">Générer</button></label>
+              <input type="text" id="ev-dateEvenement" placeholder="Jeudi 11 juin 2026">
+            </div>
+            <div class="field"><label>Horaire général</label><input type="text" id="ev-horaireGen" placeholder="Jeudi 11 juin à partir de 18h00"></div>
+            <div class="field"><label>Horaire conférence</label><input type="text" id="ev-horaireConf" placeholder="18h30"></div>
+            <div class="field"><label>Horaire cocktail</label><input type="text" id="ev-horaireCocktail" placeholder="20h00"></div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Lieu</legend>
+          <div class="form-grid cols-3">
+            <div class="field full" id="field-localisation"><label>Localisation (ville) *</label><input type="text" id="ev-localisation" placeholder="VILLEFRANCHE-DE-LAURAGAIS"></div>
+            <div class="field"><label>Lieu / salle</label><input type="text" id="ev-lieu" placeholder="Foyer Rural"></div>
+            <div class="field"><label>Adresse</label><input type="text" id="ev-adresse" placeholder="Place Gambetta"></div>
+            <div class="field"><label>Cp <span class="hint">(comme dans la donnée d'origine)</span></label><input type="text" id="ev-cp" placeholder="31290 VILLEFRANCHE-DE-LAURAGAIS"></div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Intervenant</legend>
+          <div class="form-grid">
+            <div class="field full"><label>Intervenant(s)</label><input type="text" id="ev-intervenant" placeholder="Benoit DUHAMEL, moniteur 1ers secours, pompier de la caserne de Montgiscard"></div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Image de l'événement</legend>
+          <p class="hint" style="margin:0 0 10px">Par défaut, l'image de la <strong>thématique</strong> choisie ci-dessus est utilisée automatiquement. Vous pouvez la remplacer ici par une photo propre à cet événement.</p>
+          <div class="form-grid">
+            <div class="field full">
+              <label>URL de l'image (ou laissez vide pour utiliser l'image du thème)</label>
+              <input type="text" id="ev-image" placeholder="https://... ou images/mon-evenement.jpg">
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button type="button" class="btn btn-outline btn-small" id="btn-upload-ev-image">📁 Choisir une photo...</button>
+            <input type="file" id="file-ev-image" accept="image/*" style="display:none">
+            <button type="button" class="btn btn-outline btn-small" id="btn-clear-ev-image">✕ Revenir à l'image du thème</button>
+          </div>
+          <div class="image-field-preview">
+            <div class="thumb" id="ev-image-preview"></div>
+            <div class="txt" id="ev-image-preview-label"></div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Places &amp; description</legend>
+          <div class="form-grid cols-3">
+            <div class="field"><label>Places déjà inscrites</label><input type="number" min="0" id="ev-nombreInscrit" value="0"></div>
+            <div class="field"><label>Places maximum</label><input type="number" min="0" id="ev-nombrePlaceMax" value="0"></div>
+          </div>
+          <div class="field full" style="margin-top:14px">
+            <label>Description</label>
+            <textarea id="ev-description" placeholder="Informations complémentaires affichées dans la fiche de l'événement..."></textarea>
+          </div>
+          <div class="field full" style="margin-top:14px">
+            <label>Détail complémentaire <span class="hint">(champ detail-evenement, non affiché sur la page pour le moment)</span></label>
+            <textarea id="ev-detailEvenement"></textarea>
+          </div>
+        </fieldset>
+
+        <details class="advanced">
+          <summary>Informations avancées (communication interne, non affichées publiquement)</summary>
+          <div class="form-grid">
+            <div class="field full">
+              <label>Communes concernées <span class="hint">(séparées par des virgules — enregistrées avec des underscores dans le XML, comme dans le fichier d'origine)</span></label>
+              <textarea id="ev-communes" placeholder="ARBAS, ASPET, MANE, ..."></textarea>
+            </div>
+            <div class="field"><label>Code caisse</label><input type="text" id="ev-codeCaisse" placeholder="028"></div>
+            <div class="field"><label>Libellé caisse</label><input type="text" id="ev-libelleCaisse" placeholder="PS COLOMIERS"></div>
+            <div class="field"><label>Date envoi e-mail</label><input type="text" id="ev-dateEnvoiEmail" placeholder="28/03/2024"></div>
+            <div class="field"><label>Date envoi SMS J-15</label><input type="text" id="ev-dateEnvoiSmsJ15" placeholder="31/03/2024"></div>
+            <div class="field"><label>Date envoi SMS J-2</label><input type="text" id="ev-dateEnvoiSmsJ2" placeholder="01/04/2024"></div>
+          </div>
+        </details>
+
+        <input type="hidden" id="ev-editing-id">
+      </form>
+    </div>
+    <div class="modal-content" style="padding-top:0;border-top:1px solid var(--border)">
+      <div class="form-actions">
+        <button class="btn btn-outline" id="btn-cancel-form">Annuler</button>
+        <button class="btn btn-primary" id="btn-save-event">Enregistrer l'événement</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script src="data/events-data.js"></script>
+<script src="js/editeur.js"></script>
+</body>
+</html>
