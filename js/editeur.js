@@ -604,6 +604,26 @@ const RDV_STATS = ${JSON.stringify(statsOut, null, 2)};
     toast("Fichier events-data.js téléchargé — remplacez les DEUX fichiers dans data/");
   });
 
+  /** Enveloppe le XML courant dans le bloc à coller tel quel dans le
+   *  second composant COLI d'une page AEM (voir aem/coli-2-donnees-xml.html). */
+  function buildColi2Block(xmlText) {
+    return `<script type="application/xml" id="rdv-citoyens-xml-data">\n${xmlText}\n<\/script>`;
+  }
+
+  document.getElementById("btn-copy-coli2").addEventListener("click", async () => {
+    const text = buildColi2Block(currentXml());
+    try {
+      await navigator.clipboard.writeText(text);
+      toast("Bloc AEM copié — collez-le dans le composant COLI n°2");
+    } catch (e) {
+      const ta = document.createElement("textarea");
+      ta.value = text; document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); toast("Bloc AEM copié — collez-le dans le composant COLI n°2"); }
+      catch (e2) { toast("Impossible de copier automatiquement — utilisez l'aperçu"); }
+      ta.remove();
+    }
+  });
+
   document.getElementById("btn-copy").addEventListener("click", async () => {
     const text = currentXml();
     try {

@@ -1,0 +1,696 @@
+<!-- =====================================================================
+     RENDEZ-VOUS CITOYENS — COMPOSANT COLI N°2 (données événements)
+     À coller intégralement dans un second composant COLI (HTML libre)
+     sur la MÊME page AEM que le composant N°1
+     (aem/coli-1-page-complete.html). Ce bloc ne s'affiche pas : c'est
+     un conteneur de données invisible, lu par le script du composant
+     N°1 au chargement de la page.
+
+     Pour mettre à jour les événements : ouvrez l'éditeur
+     (editeur.html), importez/modifiez/exportez le fichier
+     RDVCitoyens.xml, puis remplacez tout le contenu de la balise
+     <script type="application/xml"> ci-dessous par le nouveau contenu
+     exact du fichier exporté. Le nom RDVCitoyens.xml ne doit jamais
+     changer.
+     ===================================================================== -->
+<script type="application/xml" id="rdv-citoyens-xml-data">
+<!--
+Voici les themes possible : 
+agriculture, 
+secourisme, 
+informatique, 
+cambriolage, 
+cambriolage2, 
+cybersecurite, 
+informatique2, 
+sante-viellir, 
+secourisme2, 
+securite-montagne, 
+securite-routiere, 
+succession, 
+secourisme2 
+-->
+
+<Evenements>
+	<Evenement>
+		<id>P1</id>
+		<Date_Evenement>Jeudi 12 septembre 2024</Date_Evenement>
+		<Titre>Transmission du Patrimoine (donation, succession, assurance-vie…)</Titre>
+		<Localisation>Montastruc</Localisation>
+		<Theme>succession</Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>Maître Boyer, notaire, et d'un conseiller patrimonial du Crédit Agricole Toulouse 31.</Intervenant>
+		<HoraireGen>Jeudi 12 septembre 2024 à partir de 18h</HoraireGen>
+		<HoraireCocktail>20 heures</HoraireCocktail>
+		<HoraireConf>18h30</HoraireConf>
+		<Lieu>salle Jacques Brel</Lieu>
+		<Adresse>place d'Orléans</Adresse>
+		<Cp>Montastruc</Cp>
+		<NombreInscrit>0</NombreInscrit>
+		<NombrePlaceMax>147</NombrePlaceMax>
+		<Description>Pour vous accueillir dans les meilleures conditions, nous vous remercions de bien vouloir nous indiquer votre présence avant le 6 septembre 2024. </Description>
+		<Communes_Concernees>ARBON_ARGUENOS_ASPET_CABANAC-CAZAUX_CAZAUNOUS_COURET_ENCAUSSE-LES-THERMES_ESTADENS_GANTIES_IZAUT-DE-L’HÔTEL_JUZET D’IZAUT_MILHAS_MONCAUP_PORTET-D’ASPET_RAZECEUILLÉ_SENGOUAGNET_SOUEICH_AUSSEING_ARBAS_BELBÈZE EN COMMINGES_CASSAGNE_CASTAGNÈDE_CASTELBIAGUE_CHEIN DESSUS_ESCOULIS_FIGAROL_FOUGARON_FRANCAZAL_HERRAN_HIS_MANE_MARSOULAS_MAZÈRES SUR SALAT_MONTASTRUC DE SALIES_MONTGAILLARD DE SALIES_MONTSAUNES_ROQUEFORT SUR GARONNE_ROUÈDE_SALEICH_SALIES DU SALAT_TOUILLE_URAU_ARNAUD GUILHEM_AUZAS_LAFFITE TOUPIÈRE_LESTELLE DE SAINT-MARTORY_MANCIOUX_PROUPIARY_SAINT-MARTORY</Communes_Concernees>
+		<Code_caisse>028</Code_caisse>
+		<Libelle_caisse>PS COLOMIERS</Libelle_caisse>
+		<Date_envoi_email>28/03/2024</Date_envoi_email>
+		<Date_envoi_sms_J15>31/03/2024</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>01/04/2024</Date_envoi_sms_J2>
+	</Evenement>
+
+	<Evenement>
+		<id>P2</id>
+		<Date_Evenement>Jeudi 26 septembre 2024</Date_Evenement>
+		<Titre>Les gestes qui sauvent</Titre>
+		<Localisation>Baziege</Localisation>
+		<Theme>secourisme2</Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>Monsieur Benoît DUHAMEL, animateur 1 er secours et pompier à la caserne de Montgiscard.</Intervenant>
+		<HoraireGen>Jeudi 26 septembre à partir de 18h</HoraireGen>
+		<HoraireCocktail>20 heures</HoraireCocktail>
+		<HoraireConf>18h30</HoraireConf>
+		<Lieu>Salle de la Halle aux grains</Lieu>
+		<Adresse>121 Avenue de l'Hers</Adresse>
+		<Cp></Cp>
+		<NombreInscrit>0</NombreInscrit>
+		<NombrePlaceMax>147</NombrePlaceMax>
+		<Description>Pour vous accueillir dans les meilleures conditions, nous vous remercions de bien vouloir nous indiquer votre présence avant le 19 septembre 2024. </Description>
+		<Communes_Concernees>ARBON_ARGUENOS_ASPET_CABANAC-CAZAUX_CAZAUNOUS_COURET_ENCAUSSE-LES-THERMES_ESTADENS_GANTIES_IZAUT-DE-L’HÔTEL_JUZET D’IZAUT_MILHAS_MONCAUP_PORTET-D’ASPET_RAZECEUILLÉ_SENGOUAGNET_SOUEICH_AUSSEING_ARBAS_BELBÈZE EN COMMINGES_CASSAGNE_CASTAGNÈDE_CASTELBIAGUE_CHEIN DESSUS_ESCOULIS_FIGAROL_FOUGARON_FRANCAZAL_HERRAN_HIS_MANE_MARSOULAS_MAZÈRES SUR SALAT_MONTASTRUC DE SALIES_MONTGAILLARD DE SALIES_MONTSAUNES_ROQUEFORT SUR GARONNE_ROUÈDE_SALEICH_SALIES DU SALAT_TOUILLE_URAU_ARNAUD GUILHEM_AUZAS_LAFFITE TOUPIÈRE_LESTELLE DE SAINT-MARTORY_MANCIOUX_PROUPIARY_SAINT-MARTORY</Communes_Concernees>
+		<Code_caisse></Code_caisse>
+		<Libelle_caisse></Libelle_caisse>
+		<Date_envoi_email></Date_envoi_email>
+		<Date_envoi_sms_J15></Date_envoi_sms_J15>
+		<Date_envoi_sms_J2></Date_envoi_sms_J2>
+	</Evenement>
+
+	<Evenement>
+		<id>P3</id>
+		<Date_Evenement>Mercredi 25 septembre 2024</Date_Evenement>
+		<Titre>Les gestes qui sauvent</Titre>
+		<Localisation>Cintegabelle</Localisation>
+		<Theme>secourisme</Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>Pompiers de la caserne de Cintegabelle.</Intervenant>
+		<HoraireGen>18h00</HoraireGen>
+		<HoraireCocktail>20 heures</HoraireCocktail>
+		<HoraireConf>18h30</HoraireConf>
+		<Lieu>Salle des fêtes</Lieu>
+		<Adresse></Adresse>
+		<Cp></Cp>
+		<NombreInscrit>0</NombreInscrit>
+		<NombrePlaceMax>147</NombrePlaceMax>
+		<Description></Description>
+		<Communes_Concernees>ARBON_ARGUENOS_ASPET_CABANAC-CAZAUX_CAZAUNOUS_COURET_ENCAUSSE-LES-THERMES_ESTADENS_GANTIES_IZAUT-DE-L’HÔTEL_JUZET D’IZAUT_MILHAS_MONCAUP_PORTET-D’ASPET_RAZECEUILLÉ_SENGOUAGNET_SOUEICH_AUSSEING_ARBAS_BELBÈZE EN COMMINGES_CASSAGNE_CASTAGNÈDE_CASTELBIAGUE_CHEIN DESSUS_ESCOULIS_FIGAROL_FOUGARON_FRANCAZAL_HERRAN_HIS_MANE_MARSOULAS_MAZÈRES SUR SALAT_MONTASTRUC DE SALIES_MONTGAILLARD DE SALIES_MONTSAUNES_ROQUEFORT SUR GARONNE_ROUÈDE_SALEICH_SALIES DU SALAT_TOUILLE_URAU_ARNAUD GUILHEM_AUZAS_LAFFITE TOUPIÈRE_LESTELLE DE SAINT-MARTORY_MANCIOUX_PROUPIARY_SAINT-MARTORY</Communes_Concernees>
+		<Code_caisse></Code_caisse>
+		<Libelle_caisse></Libelle_caisse>
+		<Date_envoi_email></Date_envoi_email>
+		<Date_envoi_sms_J15></Date_envoi_sms_J15>
+		<Date_envoi_sms_J2></Date_envoi_sms_J2>
+	</Evenement>
+
+
+	<Evenement>
+		<id>1</id>
+		<Date_Evenement>Mercredi 21 Mai 2025</Date_Evenement>
+		<Titre>Transmission, succession, assurance vie</Titre>
+		<Localisation>ROUFFIAC TOLOSAN</Localisation>
+		<Theme>succession</Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>Maitre Aude SUAU et Maitre Julie SALLES</Intervenant>
+		<HoraireGen> Mercredi 21 Mai à partir de 18h00</HoraireGen>
+		<HoraireCocktail>20h00</HoraireCocktail> 
+		<HoraireConf>18h30</HoraireConf>
+		<Lieu>Salle polyvalente</Lieu>
+		<Adresse>4 chemin des Garrosses</Adresse>
+		<Cp>31180 - Rouffiac Tolosan</Cp>
+		<NombreInscrit>90</NombreInscrit>
+		<NombrePlaceMax>150</NombrePlaceMax>
+		<Description>La conférence sera également animée par 2 chargés de clientèles patrimoniales du Crédit Agricole Toulouse 31</Description>
+		<detail-evenement>Voici le details de l'evenement</detail-evenement>
+		<Code_caisse>058, 032</Code_caisse>
+		<Libelle_caisse>PS L_UNION, PS MONTGIROUVER</Libelle_caisse>
+		<Date_envoi_email>29/04/2025</Date_envoi_email>
+		<Date_envoi_sms_J15>06/05/2025</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>19/05/2025</Date_envoi_sms_J2>
+	</Evenement>
+
+	<Evenement>
+		<id>2</id>
+		<Date_Evenement>Mercredi 4 Juin 2025</Date_Evenement>
+		<Titre>La Cybersécurité</Titre>
+		<Localisation>FONBEAUZARD</Localisation>
+		<Theme>cybersecurite</Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>Major GUIMBAUD, Référent Sûreté Haute-Garonne de la Gendarmerie Nationale</Intervenant>
+		<HoraireGen> Mercredi 4 Juin à partir de 18h00</HoraireGen>
+		<HoraireCocktail>19h30</HoraireCocktail> 
+		<HoraireConf>18h30</HoraireConf>
+		<Lieu>Espace André Gentillet</Lieu>
+		<Adresse>Rue Jean Mermoz</Adresse>
+		<Cp>31140 - Fonbeauzard</Cp>
+		<NombreInscrit>50</NombreInscrit>
+		<NombrePlaceMax>300</NombrePlaceMax>
+		<Description>La conférence sera animée par le Major GUIMBAUD, Référent Sûreté Haute-Garonne de la Gendarmerie Nationale.</Description>
+		<detail-evenement>Voici le details de l'evenement</detail-evenement>
+		<Code_caisse>030, 062</Code_caisse>
+		<Libelle_caisse>PS AUCAMVILLE, PS VALLEE DE L'HERS</Libelle_caisse>
+		<Date_envoi_email>13/05/2025</Date_envoi_email>
+		<Date_envoi_sms_J15>20/05/2025</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>02/06/2025</Date_envoi_sms_J2>
+	</Evenement>
+
+	<Evenement>
+		<id>3</id>
+		<Date_Evenement>Jeudi 12 Juin 2025</Date_Evenement>
+		<Titre>La Cybersécurité</Titre>
+		<Localisation>LA MAGDELAINE-SUR-TARN</Localisation>
+		<Theme>cybersecurite</Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>Major GUIMBAUD, Référent Sûreté Haute-Garonne de la Gendarmerie Nationale</Intervenant>
+		<HoraireGen> Jeudi 12 Juin à partir de 18h00</HoraireGen>
+		<HoraireCocktail>20h00</HoraireCocktail> 
+		<HoraireConf>18h30</HoraireConf>
+		<Lieu>Salle des fêtes</Lieu>
+		<Adresse>178 route de Montjoire</Adresse>
+		<Cp>31340 - La Magdelaine-sur-Tarn</Cp>
+		<NombreInscrit>100</NombreInscrit>
+		<NombrePlaceMax>230</NombrePlaceMax>
+		<Description>L'association Rayons de Soleil en Ephad interviendra pour présenter l'association ainsi que le soutien apporté par la Fondation Crédit Agricole Toulouse 31. Lors de cette soirée un tirage au sort aura lieu avec de nombreux lots à gagner.</Description>
+		<detail-evenement>Voici le details de l'evenement</detail-evenement>
+		<Code_caisse>010, 022, 036</Code_caisse>
+		<Libelle_caisse>PS FRONTON, PS LA VALLEE DU TARN 31</Libelle_caisse>
+		<Date_envoi_email>21/05/2025</Date_envoi_email>
+		<Date_envoi_sms_J15>27/05/2025</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>10/06/2025</Date_envoi_sms_J2>
+	</Evenement>
+
+	<Evenement>
+		<id>4</id>
+		<Date_Evenement>Jeudi 12 Juin 2025</Date_Evenement>
+		<Titre>Sensibilisation aux cambriolages</Titre>
+		<Localisation>LE VERNET</Localisation>
+		<Theme>cambriolage</Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>Adjudant/Chef PRONO, Référent Sûreté Haute-Garonne de la Gendarmerie Nationale</Intervenant>
+		<HoraireGen> Jeudi 12 Juin à partir de 18h00</HoraireGen>
+		<HoraireCocktail>20h00</HoraireCocktail> 
+		<HoraireConf>18h30</HoraireConf>
+		<Lieu>Salle de l'Oratoire</Lieu>
+		<Adresse>Rue de l'Oratoire</Adresse>
+		<Cp>31810 - Le Vernet</Cp>
+		<NombreInscrit>0</NombreInscrit>
+		<NombrePlaceMax>100</NombrePlaceMax>
+		<Description>La conférence sera animée par l'Adjudant/Chef PRONO, Référent Sûreté Haute-Garonne de la Gendarmerie Nationale.</Description>
+		<detail-evenement>Voici le details de l'evenement</detail-evenement>
+		<Code_caisse>035</Code_caisse>
+		<Libelle_caisse>PS AUTERIVE</Libelle_caisse>
+		<Date_envoi_email>21/05/2025</Date_envoi_email>
+		<Date_envoi_sms_J15>27/05/2025</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>10/06/2025</Date_envoi_sms_J2>
+	</Evenement>
+
+	<Evenement>
+		<id>5</id>
+		<Date_Evenement>Mercredi 18 Juin 2025</Date_Evenement>
+		<Titre>La Cybersécurité</Titre>
+		<Localisation>MAUREVILLE</Localisation>
+		<Theme>cybersecurite</Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>Adjudant/Chef PRONO, Référent Sûreté Haute-Garonne de la Gendarmerie Nationale</Intervenant>
+		<HoraireGen> Mercredi 18 Juin à partir de 18h00</HoraireGen>
+		<HoraireCocktail>20h00</HoraireCocktail> 
+		<HoraireConf>18h30</HoraireConf>
+		<Lieu>Salle du syndicat des eaux de la Montagne Noire</Lieu>
+		<Adresse>ZA de Lourman</Adresse>
+		<Cp>31460- Maureville</Cp>
+		<NombreInscrit>0</NombreInscrit>
+		<NombrePlaceMax>150</NombrePlaceMax>
+		<Description>La conférence sera animée par l'Adjudant/Chef PRONO, Référent Sûreté Haute-Garonne de la Gendarmerie Nationale.</Description>
+		<detail-evenement>Voici le details de l'evenement</detail-evenement>
+		<Code_caisse>006, 024</Code_caisse>
+		<Libelle_caisse>PS CARAMAN, PS LANTA</Libelle_caisse>
+		<Date_envoi_email>27/05/2025</Date_envoi_email>
+		<Date_envoi_sms_J15>03/06/2025</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>16/06/2025</Date_envoi_sms_J2>
+	</Evenement>
+
+	<Evenement>
+		<id>6</id>
+		<Date_Evenement>Mercredi 24 Septembre 2025</Date_Evenement>
+		<Titre>La Prévention routière</Titre>
+		<Localisation>COLOMIERS</Localisation>
+		<Theme>securite-routiere</Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>la Police Nationale</Intervenant>
+		<HoraireGen> Mercredi 24 Septembre à partir de 18h00</HoraireGen>
+		<HoraireCocktail>20h00</HoraireCocktail> 
+		<HoraireConf>18h30</HoraireConf>
+		<Lieu>Complexe sportif associatif - salle n°5</Lieu>
+		<Adresse>Rue du Cantal</Adresse>
+		<Cp>31770- Colomiers</Cp>
+		<NombreInscrit>0</NombreInscrit>
+		<NombrePlaceMax>30</NombrePlaceMax>
+		<Description>La conférence traitera de différents thèmes : les nouvelles mobilités (trotinettes, vélos, ...) et la cohabitation routière, les distracteurs (écrans, mobiles, ...), le rappel des nouvelles signalisations et les bonnes pratiques.</Description>
+		<detail-evenement>Voici le details de l'evenement</detail-evenement>
+		<Code_caisse>028, 053</Code_caisse>
+		<Libelle_caisse>PS COLOMIERS, PS LEGUEVIN</Libelle_caisse>
+		<Date_envoi_email>02/09/2025</Date_envoi_email>
+		<Date_envoi_sms_J15>09/09/2025</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>22/09/2025</Date_envoi_sms_J2>
+	</Evenement>
+
+	<Evenement>
+		<id>7</id>
+		<Date_Evenement>Jeudi 25 Septembre 2025</Date_Evenement>
+		<Titre>Les clés du Bien Vieillir : droits et accompagnement</Titre>
+		<Localisation>CASTANET-TOLOSAN</Localisation>
+		<Theme>sante-viellir</Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>Mme Mélanie BOTTAREL, Maison des Solidarités, Chef de service Autonomie du Conseil Départemental et de Mme Esthel THOLOMET, Directrice à la Direction Santé et Autonomie de la Communauté d'Agglomération du SICOVAL</Intervenant>
+		<HoraireGen> Jeudi 25 Septembre à partir de 18h00</HoraireGen>
+		<HoraireCocktail>20h00</HoraireCocktail> 
+		<HoraireConf>18h30</HoraireConf>
+		<Lieu>Salle du Lac</Lieu>
+		<Adresse>Boulevard des Campanhols</Adresse>
+		<Cp>31320 Castanet-Tolosan</Cp>
+		<NombreInscrit>0</NombreInscrit>
+		<NombrePlaceMax>135</NombrePlaceMax>
+		<Description>Avec le témoignage de l'asssociation 6A qui a pour vocation d'accueillir et soutenir des personnes adultes atteintes de troubles cognitifs et leurs aidants.</Description>
+		<detail-evenement>Voici le details de l'evenement</detail-evenement>
+		<Code_caisse>052</Code_caisse>
+		<Libelle_caisse>PS CASTANET</Libelle_caisse>
+		<Date_envoi_email>02/09/2025</Date_envoi_email>
+		<Date_envoi_sms_J15>09/09/2025</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>22/09/2025</Date_envoi_sms_J2>
+	</Evenement>
+
+	<Evenement>
+		<id>8</id>
+		<Date_Evenement>Jeudi 9 Octobre 2025</Date_Evenement>
+		<Titre>Bien Vieillir à Toulouse : Aides et Solutions</Titre>
+		<Localisation>TOULOUSE</Localisation>
+		<Theme>sante-viellir</Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>Mme Marine LEFEVRE, Elue en charge des Séniors à la Mairie de Toulouse et Mme Cécile DIAZ-ROUFOSSE, Coordinatrice de la plateforme d'accompagnement et de répit des aidants du domaine de la Cadène</Intervenant>
+		<HoraireGen> Jeudi 9 Octobre à partir de 17h30</HoraireGen>
+		<HoraireCocktail>19h30</HoraireCocktail> 
+		<HoraireConf>18h00</HoraireConf>
+		<Lieu>Le Village By CA</Lieu>
+		<Adresse>31 Allées Jules Guesde</Adresse>
+		<Cp>31400 Toulouse</Cp>
+		<NombreInscrit>0</NombreInscrit>
+		<NombrePlaceMax>180</NombrePlaceMax>
+		<Description>Remise du chèque à l'Association ALIOCEMA, coup de coeur des sociétaires des Caisses locales de Toulouse lors du vote des Assemblées Générales cette année.</Description>
+		<detail-evenement>Voici le details de l'evenement</detail-evenement>
+		<Code_caisse>031, 040, 041, 056, 060</Code_caisse>
+		<Libelle_caisse>PS TOULOUSE OZENNE, PS TOULOUSE SUD-EST, PS TOULOUSE NORD, PS TLSE JEANNE D'ARC, PS TLSE RIVE GAUCHE</Libelle_caisse>
+		<Date_envoi_email>17/09/2025</Date_envoi_email>
+		<Date_envoi_sms_J15>24/09/2025</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>06/10/2025</Date_envoi_sms_J2>
+	</Evenement>
+
+	<Evenement>
+		<id>9</id>
+		<Date_Evenement>Jeudi 9 Octobre 2025</Date_Evenement>
+		<Titre>La Cybersécurité</Titre>
+		<Localisation>SANA</Localisation>
+		<Theme>cybersecurite</Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>l'Adjudant/chef PRONO, Référent Sûreté de la Gendarmerie Nationale de la Haute-Garonne</Intervenant>
+		<HoraireGen>Jeudi 9 Octobre à partir de 18h30</HoraireGen>
+		<HoraireCocktail>20h30</HoraireCocktail> 
+		<HoraireConf>19h00</HoraireConf>
+		<Lieu>Salle des fêtes</Lieu>
+		<Adresse>Chemin Roger Chaplet</Adresse>
+		<Cp>31220 Sana</Cp>
+		<NombreInscrit>0</NombreInscrit>
+		<NombrePlaceMax>150</NombrePlaceMax>
+		<Description></Description>
+		<detail-evenement>Voici le details de l'evenement</detail-evenement>
+		<Code_caisse>007, 026, 011</Code_caisse>
+		<Libelle_caisse>PS TERRES DU COMMINGES, PS FOUSSERET</Libelle_caisse>
+		<Date_envoi_email>17/09/2025</Date_envoi_email>
+		<Date_envoi_sms_J15>24/09/2025</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>06/10/2025</Date_envoi_sms_J2>
+	</Evenement>
+
+	<Evenement>
+		<id>10</id>
+		<Date_Evenement>Jeudi 16 Octobre 2025</Date_Evenement>
+		<Titre>Prévention arnaques</Titre>
+		<Localisation>BEAUZELLE</Localisation>
+		<Theme>cybersecurite</Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>la Gendarmerie de Beauzelle</Intervenant>
+		<HoraireGen>Jeudi 16 Octobre à partir de 18h30</HoraireGen>
+		<HoraireCocktail>20h30</HoraireCocktail> 
+		<HoraireConf>19h00</HoraireConf>
+		<Lieu>Salle des fêtes de Garossos</Lieu>
+		<Adresse>249 Rue du Riou</Adresse>
+		<Cp>31700 Beauzelle</Cp>
+		<NombreInscrit>0</NombreInscrit>
+		<NombrePlaceMax>150</NombrePlaceMax>
+		<Description></Description>
+		<detail-evenement>Voici le details de l'evenement</detail-evenement>
+		<Code_caisse>051</Code_caisse>
+		<Libelle_caisse>PS BLAGNAC</Libelle_caisse>
+		<Date_envoi_email>24/09/2025</Date_envoi_email>
+		<Date_envoi_sms_J15>01/10/2025</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>13/10/2025</Date_envoi_sms_J2>
+	</Evenement>
+
+	<Evenement>
+		<id>11</id>
+		<Date_Evenement>Jeudi 16 Octobre 2025</Date_Evenement>
+		<Titre>la Cybersécurité</Titre>
+		<Localisation>L'ISLE EN DODON</Localisation>
+		<Theme>cybersecurite</Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>l'Adjudant/chef PRONO, Référent Sûreté de la Gendarmerie Nationale de la Haute-Garonne</Intervenant>
+		<HoraireGen>Jeudi 16 Octobre à partir de 18h00</HoraireGen>
+		<HoraireCocktail>20h00</HoraireCocktail> 
+		<HoraireConf>18h30</HoraireConf>
+		<Lieu>Halle Centrale de la Mairie</Lieu>
+		<Adresse>Place de la Mairie</Adresse>
+		<Cp>31230 L'Isle en Dodon</Cp>
+		<NombreInscrit>0</NombreInscrit>
+		<NombrePlaceMax>120</NombrePlaceMax>
+		<Description></Description>
+		<detail-evenement>Voici le details de l'evenement</detail-evenement>
+		<Code_caisse>013, 004</Code_caisse>
+		<Libelle_caisse>PS L'ISLE EN DODON, PS BOULOGNE</Libelle_caisse>
+		<Date_envoi_email>24/09/2025</Date_envoi_email>
+		<Date_envoi_sms_J15>01/10/2025</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>13/10/2025</Date_envoi_sms_J2>
+	</Evenement>
+
+	<Evenement>
+		<id>12</id>
+		<Date_Evenement>Jeudi 6 Novembre 2025</Date_Evenement>
+		<Titre>Les gestes qui sauvent</Titre>
+		<Localisation>REVEL</Localisation>
+		<Theme>secourisme</Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>les Pompiers de Revel</Intervenant>
+		<HoraireGen>Jeudi 6 Novembre à partir de 18h00</HoraireGen>
+		<HoraireCocktail>20h00</HoraireCocktail> 
+		<HoraireConf>18h30</HoraireConf>
+		<Lieu>Salle Claude Nougaro</Lieu>
+		<Adresse>2 Rue Padouvenc de Castres</Adresse>
+		<Cp>31250 Revel</Cp>
+		<NombreInscrit>0</NombreInscrit>
+		<NombrePlaceMax>150</NombrePlaceMax>
+		<Description>Avec l'intervention des Pompiers de Revel</Description>
+		<detail-evenement>Voici le details de l'evenement</detail-evenement>
+		<Code_caisse>016</Code_caisse>
+		<Libelle_caisse>PS REVEL</Libelle_caisse>
+		<Date_envoi_email>16/10/2025</Date_envoi_email>
+		<Date_envoi_sms_J15>22/10/2025</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>03/11/2025</Date_envoi_sms_J2>
+	</Evenement>
+
+
+	<Evenement>
+		<id>13</id>
+		<Date_Evenement>Jeudi 6 Novembre 2025</Date_Evenement>
+		<Titre>Comprendre le Burn Out</Titre>
+		<Localisation>TOURNEFEUILLE</Localisation>
+		<Theme>sante-viellir</Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>l'Association SOS BURN OUT France</Intervenant>
+		<HoraireGen>Jeudi 6 Novembre à partir de 18h00</HoraireGen>
+		<HoraireCocktail>20h30</HoraireCocktail> 
+		<HoraireConf>18h30</HoraireConf>
+		<Lieu>Le Phare - Salle jaune</Lieu>
+		<Adresse>32 bis Route de Tarbes</Adresse>
+		<Cp>31170 Tournefeuille</Cp>
+		<NombreInscrit>0</NombreInscrit>
+		<NombrePlaceMax>150</NombrePlaceMax>
+		<Description>Avec l'intervention de l'Association SOS BURN OUT France</Description>
+		<detail-evenement>Voici le details de l'evenement</detail-evenement>
+		<Code_caisse>050, 057</Code_caisse>
+		<Libelle_caisse>PS PLAISANCE, PS TOURNEFEUILLE</Libelle_caisse>
+		<Date_envoi_email>16/10/2025</Date_envoi_email>
+		<Date_envoi_sms_J15>22/10/2025</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>03/11/2025</Date_envoi_sms_J2>
+	</Evenement>
+
+
+	<Evenement>
+		<id>14</id>
+		<Date_Evenement>Mercredi 19 Novembre 2025</Date_Evenement>
+		<Titre>Le défi de l’accès aux soins en Haute Garonne : l’exemple du Muretain</Titre>
+		<Localisation>MURET</Localisation>
+		<Theme>sante-viellir</Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>Avec l'intervention de Nicolas HOMEHR, médecin généraliste, Président de la CPTS du Sud-Toulousain et en présence de Sylvie DE GRAEVE, pharmacienne et Thibaut HARANG, représentant Omedys</Intervenant>
+		<HoraireGen>Mercredi 19 Novembre à partir de 18h00</HoraireGen>
+		<HoraireCocktail>20h00</HoraireCocktail> 
+		<HoraireConf>18h45</HoraireConf>
+		<Lieu>Cinéma Véo</Lieu>
+		<Adresse>49 Avenue d'Europe</Adresse>
+		<Cp>31600 Muret</Cp>
+		<NombreInscrit>0</NombreInscrit>
+		<NombrePlaceMax>150</NombrePlaceMax>
+		<Description>Avec l'intervention de Nicolas HOMEHR, médecin généraliste, Président de la CPTS du Sud-Toulousain et en présence de Sylvie DE GRAEVE, pharmacienne et Thibaut HARANG, représentant Omedys</Description>
+		<detail-evenement>Voici le details de l'evenement</detail-evenement>
+		<Code_caisse>014, 018</Code_caisse>
+		<Libelle_caisse>PS MURET, PS SAVES</Libelle_caisse>
+		<Date_envoi_email>28/10/2025</Date_envoi_email>
+		<Date_envoi_sms_J15>04/11/2025</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>17/11/2025</Date_envoi_sms_J2>
+	</Evenement>
+
+
+	<Evenement>
+		<id>15</id>
+		<Date_Evenement>Jeudi 20 Novembre 2025</Date_Evenement>
+		<Titre>Les risques en montagne : informons-nous pour éviter les dangers</Titre>
+		<Localisation>BAGNERES-DE-LUCHON</Localisation>
+		<Theme>securite-montagne</Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>Sébastien LUCENA, Commandant d’Unité du Peloton de Gendarmerie de Haute Montagne de Bagnères-de-Luchon et son équipe</Intervenant>
+		<HoraireGen>Jeudi 20 Novembre à partir de 18h00</HoraireGen>
+		<HoraireCocktail>21h00</HoraireCocktail> 
+		<HoraireConf>18h30</HoraireConf>
+		<Lieu>Salle Henri PAC</Lieu>
+		<Adresse>Place Richelieu</Adresse>
+		<Cp>31110 Bagnères-de-Luchon</Cp>
+		<NombreInscrit>0</NombreInscrit>
+		<NombrePlaceMax>150</NombrePlaceMax>
+		<Description>Avec l'intervention de Sébastien LUCENA , Commandant d’Unité du Peloton de Gendarmerie de Haute Montagne de Bagnères-de-Luchon et son équipe</Description>
+		<detail-evenement>Voici le details de l'evenement</detail-evenement>
+		<Code_caisse>054</Code_caisse>
+		<Libelle_caisse>PS BAGNERES DE LUCHON</Libelle_caisse>
+		<Date_envoi_email>28/10/2025</Date_envoi_email>
+		<Date_envoi_sms_J15>04/11/2025</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>17/11/2025</Date_envoi_sms_J2>
+	</Evenement>
+
+
+	<Evenement>
+		<id>16</id>
+		<Date_Evenement>Jeudi 20 Novembre 2025</Date_Evenement>
+		<Titre>La mobilité</Titre>
+		<Localisation>DONNEVILLE</Localisation>
+		<Theme></Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>l'Association AutoLien</Intervenant>
+		<HoraireGen>Jeudi 20 Novembre à partir de 18h00</HoraireGen>
+		<HoraireCocktail>20h00</HoraireCocktail> 
+		<HoraireConf>18h30</HoraireConf>
+		<Lieu>Salle des fêtes</Lieu>
+		<Adresse>28 RN 113</Adresse>
+		<Cp>31450 Donneville</Cp>
+		<NombreInscrit>0</NombreInscrit>
+		<NombrePlaceMax>150</NombrePlaceMax>
+		<Description>Avec l'intervention de la société AutoLien</Description>
+		<detail-evenement>Voici le details de l'evenement</detail-evenement>
+		<Code_caisse>055</Code_caisse>
+		<Libelle_caisse>PS MONTGISCARD</Libelle_caisse>
+		<Date_envoi_email>28/10/2025</Date_envoi_email>
+		<Date_envoi_sms_J15>04/11/2025</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>17/11/2025</Date_envoi_sms_J2>
+	</Evenement>
+
+
+	<Evenement>
+		<id>17</id>
+		<Date_Evenement>Mardi 25 Novembre 2025</Date_Evenement>
+		<Titre>La Cybersécurité</Titre>
+		<Localisation>QUINT-FONSEGRIVES</Localisation>
+		<Theme>cybersecurite</Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>l'Adjudant/chef PRONO, Référent Sûreté de la Gendarmerie Nationale de la Haute-Garonne</Intervenant>
+		<HoraireGen>Mardi 25 Novembre à partir de 18h00</HoraireGen>
+		<HoraireCocktail>20h00</HoraireCocktail> 
+		<HoraireConf>18h30</HoraireConf>
+		<Lieu>Espace Bernard Solera</Lieu>
+		<Adresse>38-40 Route de la Saune</Adresse>
+		<Cp>31130 Quint-Fonsegrives</Cp>
+		<NombreInscrit>0</NombreInscrit>
+		<NombrePlaceMax>150</NombrePlaceMax>
+		<Description>Avec l'intervention de l'Adjudant/chef PRONO, Référent Sûreté de la Gendarmerie Nationale de la Haute-Garonne</Description>
+		<detail-evenement>Voici le details de l'evenement</detail-evenement>
+		<Code_caisse>059</Code_caisse>
+		<Libelle_caisse>PS BALMA FONSEGRIVES</Libelle_caisse>
+		<Date_envoi_email>31/10/2025</Date_envoi_email>
+		<Date_envoi_sms_J15>07/11/2025</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>21/11/2025</Date_envoi_sms_J2>
+	</Evenement>
+
+	<Evenement>
+		<id>18</id>
+		<Date_Evenement>Mardi 16 Décembre 2025</Date_Evenement>
+		<Titre>La prévention des cambriolages</Titre>
+		<Localisation>SAINT-ORENS-DE-GAMEVILLE</Localisation>
+		<Theme>cambriolage</Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>l'Adjudant/chef PRONO, Référent Sûreté de la Gendarmerie Nationale de la Haute-Garonne</Intervenant>
+		<HoraireGen>Mardi 16 Décembre à partir de 18h00</HoraireGen>
+		<HoraireCocktail>20h00</HoraireCocktail> 
+		<HoraireConf>18h30</HoraireConf>
+		<Lieu>Chateau Catala</Lieu>
+		<Adresse>49 Boulevard Catala</Adresse>
+		<Cp>31650 Saint-Orens-de-Gameville</Cp>
+		<NombreInscrit>0</NombreInscrit>
+		<NombrePlaceMax>100</NombrePlaceMax>
+		<Description>Avec l'intervention de l'Adjudant/chef PRONO, Référent Sûreté de la Gendarmerie Nationale de la Haute-Garonne</Description>
+		<detail-evenement>Voici le details de l'evenement</detail-evenement>
+		<Code_caisse>034</Code_caisse>
+		<Libelle_caisse>PS SAINT-ORENS</Libelle_caisse>
+		<Date_envoi_email>24/11/2025</Date_envoi_email>
+		<Date_envoi_sms_J15>01/12/2025</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>12/12/2025</Date_envoi_sms_J2>
+	</Evenement>
+
+<Evenement>
+		<id>19</id>
+		<Date_Evenement>jeudi 29 janvier 2026</Date_Evenement>
+		<Titre>Venez découvrir ICOPE, programme de prévention santé pour les plus de 60 ans</Titre>
+		<Localisation>CUGNAUX</Localisation>
+		<Theme>sante-viellir</Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>Sandrine BLATZHEIM, infirmière animatrice territoriale ICOPE</Intervenant>
+		<HoraireGen>Jeudi 29 janvier à partir de 18h30</HoraireGen>
+		<HoraireCocktail>20h30</HoraireCocktail> 
+		<HoraireConf>19h00</HoraireConf>
+		<Lieu>Salle Albert Camus</Lieu>
+		<Adresse>1 Place de la République</Adresse>
+		<Cp>31270 CUGNAUX</Cp>
+		<NombreInscrit>0</NombreInscrit>
+		<NombrePlaceMax>100</NombrePlaceMax>
+		<Description>Destiné aux personnes de plus de 60 ans, autonomes et vivant à leur domicile, ICOPE est un programme de prévention qui permet de tester son capital santé et de le suivre dans le temps</Description>
+		<detail-evenement>Voici le details de l'evenement</detail-evenement>
+		<Code_caisse>029</Code_caisse>
+		<Libelle_caisse>PS CUGNAUX</Libelle_caisse>
+		<Date_envoi_email>06/01/2026</Date_envoi_email>
+		<Date_envoi_sms_J15>13/01/2026</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>26/01/2026</Date_envoi_sms_J2>
+	</Evenement>
+
+
+<Evenement>
+		<id>20</id>
+		<Date_Evenement>Jeudi 11 juin 2026</Date_Evenement>
+		<Titre>Les gestes qui sauvent</Titre>
+		<Localisation>VILLEFRANCHE-DE-LAURAGAIS</Localisation>
+		<Theme>secourisme</Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>Benoit DUHAMEL, moniteur 1ers secours, pompier de la caserne de Montgiscard</Intervenant>
+		<HoraireGen>Jeudi 11 juin à partir de 18h00</HoraireGen>
+		<HoraireCocktail>20h00</HoraireCocktail> 
+		<HoraireConf>18h30</HoraireConf>
+		<Lieu>Foyer Rural</Lieu>
+		<Adresse>Place Gambetta</Adresse>
+		<Cp>31290 VILLEFRANCHE-DE-LAURAGAIS</Cp>
+		<NombreInscrit>0</NombreInscrit>
+		<NombrePlaceMax>150</NombrePlaceMax>
+		<Description>Mme GARDEY sera également présente pour présenter l'Association MELISSA, lauréate du "Coup de Coeur Sociétaires 2026"</Description>
+		<detail-evenement> Voici le détail de l'évènement </detail-evenement>
+		<Code_caisse>021</Code_caisse>
+		<Libelle_caisse>PS LAURAGAIS</Libelle_caisse>
+		<Date_envoi_email>21/05/2026</Date_envoi_email>
+		<Date_envoi_sms_J15>27/05/2026</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>08/06/2026</Date_envoi_sms_J2>
+	</Evenement>
+
+<Evenement>
+		<id>21</id>
+		<Date_Evenement>Jeudi 25 juin 2026</Date_Evenement>
+		<Titre>La cybersécurité</Titre>
+		<Localisation>TOURNEFEUILLE</Localisation>
+		<Theme>cybersecurite</Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>Maréchal des logis-chef MARESS, Référent Sûreté de la Gendarmerie Nationale de la Haute-Garonne</Intervenant>
+		<HoraireGen>Jeudi 25 juin à partir de 18h30</HoraireGen>
+		<HoraireCocktail>20h00</HoraireCocktail> 
+		<HoraireConf>19h00</HoraireConf>
+		<Lieu>Le Phare - Salle Jaune</Lieu>
+		<Adresse>32 bis Route de Tarbes</Adresse>
+		<Cp>31170 TOURNEFEUILLE</Cp>
+		<NombreInscrit>0</NombreInscrit>
+		<NombrePlaceMax>150</NombrePlaceMax>
+		<Description>Avec l'intervention d'Isabelle MARESS, Maréchal des logis-chef et Référent Sûreté de la Gendarmerie Nationale de la Haute-Garonne</Description>
+		<detail-evenement> Voici le détail de l'évènement </detail-evenement>
+		<Code_caisse>050, 057</Code_caisse>
+		<Libelle_caisse>PS PLAISANCE, PS TOURNEFEUILLE</Libelle_caisse>
+		<Date_envoi_email>02/06/2026</Date_envoi_email>
+		<Date_envoi_sms_J15>09/06/2026</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>22/06/2026</Date_envoi_sms_J2>
+	</Evenement>
+
+
+    <Evenement>
+		<id>22</id>
+		<Date_Evenement>Mercredi 17 juin 2026</Date_Evenement>
+		<Titre>Les Addictions</Titre>
+		<Localisation>COLOMIERS</Localisation>
+		<Theme></Theme>
+		<Statut>Terminé</Statut>
+		<Intervenant>la Police Nationale</Intervenant>
+		<HoraireGen>Mercredi 17 juin à partir de 18h00</HoraireGen>
+		<HoraireCocktail>20h30</HoraireCocktail> 
+		<HoraireConf>18h30</HoraireConf>
+		<Lieu>Complexe sportif associatif - salle n°5</Lieu>
+		<Adresse>Rue du Cantal</Adresse>
+		<Cp>31770 COLOMIERS</Cp>
+		<NombreInscrit>0</NombreInscrit>
+		<NombrePlaceMax>50</NombrePlaceMax>
+		<Description>La réunion sera animée par la Police Nationale</Description>
+		<detail-evenement> Voici le détail de l'évènement </detail-evenement>
+		<Code_caisse>028</Code_caisse>
+		<Libelle_caisse>PS COLOMIERS</Libelle_caisse>
+		<Date_envoi_email>26/05/2026</Date_envoi_email>
+		<Date_envoi_sms_J15>02/06/2026</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>16/06/2026</Date_envoi_sms_J2>
+	</Evenement>
+	
+	
+	<Evenement>
+		<id>23</id>
+		<Date_Evenement>Mardi 13 Octobre 2026</Date_Evenement>
+		<Titre>L'Intelligence Artificielle, décrypter, illustrer et comprendre</Titre>
+		<Localisation>QUINT-FONSEGRIVES</Localisation>
+		<Theme>default</Theme>
+		<Statut>En cours</Statut>
+		<Intervenant>Un expert du Crédit Agricole Toulouse 31</Intervenant>
+		<HoraireGen>Mardi 13 Octobre à partir de 18h00</HoraireGen>
+		<HoraireCocktail>20h00</HoraireCocktail> 
+		<HoraireConf>18h30</HoraireConf>
+		<Lieu>Espace Bernard Soléra</Lieu>
+		<Adresse>38-40 Route de la Saune</Adresse>
+		<Cp>31130 QUINT-FONSEGRIVES</Cp>
+		<NombreInscrit>0</NombreInscrit>
+		<NombrePlaceMax>350</NombrePlaceMax>
+		<Description>La réunion sera animée par un expert du Crédit Agricole Toulouse 31</Description>
+		<detail-evenement> Voici le détail de l'évènement </detail-evenement>
+		<Code_caisse>006, 034, 059</Code_caisse>
+		<Libelle_caisse>PS LA SEILLONNE, PS SAINT-ORENS, PS BALMA FONSEGRIVES</Libelle_caisse>
+		<Date_envoi_email>21/09/2026</Date_envoi_email>
+		<Date_envoi_sms_J15>28/09/2026</Date_envoi_sms_J15>
+		<Date_envoi_sms_J2>09/10/2026</Date_envoi_sms_J2>
+	</Evenement>
+
+
+</Evenements>
+</script>

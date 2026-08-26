@@ -1,9 +1,11 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rendez-vous Citoyens — Crédit Agricole Toulouse 31</title>
+<!-- =====================================================================
+     RENDEZ-VOUS CITOYENS — COMPOSANT COLI N°1 (page complète)
+     À coller intégralement dans un composant COLI (HTML libre) sur la
+     page AEM. Contient le HTML, le CSS (<style>) et le JS (<script>)
+     de la page. Le second composant COLI (voir
+     aem/coli-2-donnees-xml.html) doit être présent AILLEURS sur la
+     MÊME page AEM : ce script va y lire les données événements.
+     ===================================================================== -->
 <style>
 /* =====================================================================
    RENDEZ-VOUS CITOYENS — FEUILLE DE STYLE
@@ -550,8 +552,6 @@ a { color: inherit; }
 }
 
 </style>
-</head>
-<body>
 
 <header class="hero">
   <div class="hero-glow hero-glow-1"></div>
@@ -672,15 +672,32 @@ a { color: inherit; }
   </div>
 </div>
 
-<script src="data/events-data.js"></script>
 <script>
 /* =====================================================================
-   RENDEZ-VOUS CITOYENS — LOGIQUE DE LA PAGE
-   RDV_THEMES / RDV_STATS et le texte XML brut (RDV_XML) viennent du
-   fichier data/events-data.js, chargé AVANT ce script dans index.html.
-   RDV_XML est interprété ici même, au chargement, avec le parseur XML
-   natif du navigateur (DOMParser) — voir parseEvenementsXML().
+   RENDEZ-VOUS CITOYENS — LOGIQUE DE LA PAGE (bloc à coller dans le
+   COMPOSANT COLI N°1, avec tout le reste de ce fichier).
+   Les données événements (RDV_XML) NE SONT PAS ici : elles viennent du
+   COMPOSANT COLI N°2, collé n'importe où ailleurs sur la même page
+   AEM (voir aem/coli-2-donnees-xml.html). Ce script va les chercher
+   dans le DOM via #rdv-citoyens-xml-data au chargement de la page.
    ===================================================================== */
+
+const RDV_THEMES = [
+  { id: "secourisme",         label: "Les gestes qui sauvent",      icone: "🚑", couleur: "#C81620", image: "images/secourisme.svg" },
+  { id: "secourisme2",        label: "Les gestes qui sauvent",      icone: "🚑", couleur: "#C81620", image: "images/secourisme.svg" },
+  { id: "cybersecurite",      label: "Cybersécurité",                icone: "🔒", couleur: "#005F60", image: "images/cybersecurite.svg" },
+  { id: "cambriolage",        label: "Prévention des cambriolages",  icone: "🛡️", couleur: "#004D4E", image: "images/cambriolage.svg" },
+  { id: "cambriolage2",       label: "Prévention des cambriolages",  icone: "🛡️", couleur: "#004D4E", image: "images/cambriolage.svg" },
+  { id: "informatique",       label: "Informatique",                 icone: "💻", couleur: "#007173", image: "images/informatique.svg" },
+  { id: "informatique2",      label: "Informatique",                 icone: "💻", couleur: "#007173", image: "images/informatique.svg" },
+  { id: "succession",         label: "Transmission du patrimoine",   icone: "📜", couleur: "#00291C", image: "images/succession.svg" },
+  { id: "agriculture",        label: "Agriculture",                  icone: "🌾", couleur: "#1F6E4A", image: "images/agriculture.svg" },
+  { id: "sante-viellir",      label: "Bien vieillir & santé",        icone: "💚", couleur: "#A1273A", image: "images/sante-viellir.svg" },
+  { id: "securite-montagne",  label: "Sécurité en montagne",         icone: "⛰️", couleur: "#164A36", image: "images/securite-montagne.svg" },
+  { id: "securite-routiere",  label: "Sécurité routière",            icone: "🚦", couleur: "#C81620", image: "images/securite-routiere.svg" },
+  { id: "default",            label: "Autre thème",                  icone: "⭐", couleur: "#003D2B", image: "images/autre.svg" }
+];
+const RDV_STATS = {};
 
 (function () {
   "use strict";
@@ -1016,5 +1033,3 @@ a { color: inherit; }
 })();
 
 </script>
-</body>
-</html>
