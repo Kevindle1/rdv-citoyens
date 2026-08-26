@@ -1,14 +1,22 @@
 <!-- =====================================================================
-     RENDEZ-VOUS CITOYENS — COMPOSANT COLI N°2 (données événements)
+     RENDEZ-VOUS CITOYENS — COMPOSANT COLI N°2 (données)
      À coller intégralement dans le second composant COLI de la page
      AEM (n'importe où sur la même page que coli-1-page.html).
      Ce fichier ne s'affiche jamais : c'est un conteneur de données que
-     le script du composant n°1 lit au chargement de la page.
+     le script du composant n°1 lit au chargement de la page — les
+     événements (bloc XML), ET la configuration : thématiques et
+     chiffres clés (bloc JSON).
 
      MISE À JOUR (par le service vie mutuelle) : ouvrez editeur.html,
-     modifiez/ajoutez/supprimez un événement, cliquez sur
-     « Copier le bloc de données », puis remplacez tout le contenu du
-     composant COLI n°2 dans AEM par ce qui vient d'être copié.
+     modifiez/ajoutez/supprimez un événement OU une thématique OU un
+     chiffre clé, puis :
+       - soit vous avez lié ce fichier dans l'éditeur (bandeau « Fichiers
+         liés » en haut, sur Chrome/Edge) : bouton « Enregistrer
+         directement » et c'est fait, ce fichier est mis à jour tout seul ;
+       - soit cliquez sur « Copier le bloc de données » et remplacez tout
+         le contenu du composant COLI n°2 dans AEM par ce qui vient d'être
+         copié (les deux blocs à la fois).
+     coli-1-page.html n'a jamais besoin d'être modifié.
      ===================================================================== -->
 <script type="application/xml" id="rdv-citoyens-xml-data">
 <!--
@@ -690,4 +698,103 @@ secourisme2
 
 
 </Evenements>
+</script>
+
+<script type="application/json" id="rdv-citoyens-config-data">
+{
+  "themes": [
+    {
+      "id": "secourisme",
+      "label": "Les gestes qui sauvent",
+      "icone": "🚑",
+      "couleur": "#C81620",
+      "image": "images/secourisme.svg"
+    },
+    {
+      "id": "secourisme2",
+      "label": "Les gestes qui sauvent",
+      "icone": "🚑",
+      "couleur": "#C81620",
+      "image": "images/secourisme.svg"
+    },
+    {
+      "id": "cybersecurite",
+      "label": "Cybersécurité",
+      "icone": "🔒",
+      "couleur": "#005F60",
+      "image": "images/cybersecurite.svg"
+    },
+    {
+      "id": "cambriolage",
+      "label": "Prévention des cambriolages",
+      "icone": "🛡️",
+      "couleur": "#004D4E",
+      "image": "images/cambriolage.svg"
+    },
+    {
+      "id": "cambriolage2",
+      "label": "Prévention des cambriolages",
+      "icone": "🛡️",
+      "couleur": "#004D4E",
+      "image": "images/cambriolage.svg"
+    },
+    {
+      "id": "informatique",
+      "label": "Informatique",
+      "icone": "💻",
+      "couleur": "#007173",
+      "image": "images/informatique.svg"
+    },
+    {
+      "id": "informatique2",
+      "label": "Informatique",
+      "icone": "💻",
+      "couleur": "#007173",
+      "image": "images/informatique.svg"
+    },
+    {
+      "id": "succession",
+      "label": "Transmission du patrimoine",
+      "icone": "📜",
+      "couleur": "#00291C",
+      "image": "images/succession.svg"
+    },
+    {
+      "id": "agriculture",
+      "label": "Agriculture",
+      "icone": "🌾",
+      "couleur": "#1F6E4A",
+      "image": "images/agriculture.svg"
+    },
+    {
+      "id": "sante-viellir",
+      "label": "Bien vieillir & santé",
+      "icone": "💚",
+      "couleur": "#A1273A",
+      "image": "images/sante-viellir.svg"
+    },
+    {
+      "id": "securite-montagne",
+      "label": "Sécurité en montagne",
+      "icone": "⛰️",
+      "couleur": "#164A36",
+      "image": "images/securite-montagne.svg"
+    },
+    {
+      "id": "securite-routiere",
+      "label": "Sécurité routière",
+      "icone": "🚦",
+      "couleur": "#C81620",
+      "image": "images/securite-routiere.svg"
+    },
+    {
+      "id": "default",
+      "label": "Autre thème",
+      "icone": "⭐",
+      "couleur": "#003D2B",
+      "image": "images/autre.svg"
+    }
+  ],
+  "stats": {}
+}
 </script>

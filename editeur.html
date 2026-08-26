@@ -149,6 +149,11 @@ table.themes-table input[type=color] { width:44px; height:32px; border:none; pad
 
 .empty-state { text-align:center; color:var(--grey-text); padding:30px 0; font-size:.88rem; }
 .import-banner { background:#fff7e6; border:1px solid #f2d489; color:#7a5b00; padding:12px 16px; border-radius:10px; margin-bottom:18px; display:flex; justify-content:space-between; align-items:center; gap:14px; font-size:.85rem; }
+.link-banner { background:#eaf7f2; border:1px solid #9bd8c0; color:#0a4a34; padding:12px 16px; border-radius:10px; margin-bottom:18px; display:flex; justify-content:space-between; align-items:center; gap:14px; font-size:.85rem; flex-wrap:wrap; }
+.link-banner .link-status { display:flex; flex-direction:column; gap:2px; }
+.link-banner .link-actions { display:flex; gap:8px; flex-wrap:wrap; }
+.link-chip { display:inline-flex; align-items:center; gap:6px; background:#fff; border:1px solid #9bd8c0; border-radius:20px; padding:4px 12px; font-size:.78rem; font-weight:600; }
+.link-note { color:var(--grey-text); font-size:.8rem; }
 
 @media (max-width: 700px) {
   .form-grid, .form-grid.cols-3 { grid-template-columns: 1fr; }
@@ -176,6 +181,18 @@ table.themes-table input[type=color] { width:44px; height:32px; border:none; pad
       <button class="btn btn-small btn-primary" id="restore-draft">Restaurer</button>
       <button class="btn btn-small btn-outline" id="discard-draft">Ignorer</button>
     </span>
+  </div>
+
+  <div id="link-banner" class="link-banner">
+    <div class="link-status" id="link-status">
+      <strong>🔗 Fichiers liés</strong>
+      <span id="link-status-text">Aucun fichier lié pour l'instant.</span>
+    </div>
+    <div class="link-actions" id="link-actions">
+      <button class="btn btn-outline btn-small" id="btn-link-coli2">📄 Lier coli-2-donnees.html</button>
+      <button class="btn btn-outline btn-small" id="btn-link-xml">📄 Lier RDVCitoyens.xml</button>
+      <button class="btn btn-primary btn-small" id="btn-save-direct" disabled>💾 Enregistrer directement</button>
+    </div>
   </div>
 
   <div class="toolbar">
@@ -216,7 +233,7 @@ table.themes-table input[type=color] { width:44px; height:32px; border:none; pad
   <div class="tab-panel" id="tab-themes">
     <div class="panel">
       <h2>Thématiques disponibles</h2>
-      <p class="hint" style="color:var(--grey-text);font-size:.85rem;margin-top:-8px">L'image de chaque thématique s'affiche automatiquement sur tout événement de ce thème qui n'a pas sa propre photo. <strong>Ces thématiques sont recopiées directement dans coli-1-page.html</strong> (composant COLI n°1) : si vous en modifiez une ici, reportez le changement à la main dans le tableau RDV_THEMES du script de coli-1-page.html — cet onglet sert surtout à prévisualiser.</p>
+      <p class="hint" style="color:var(--grey-text);font-size:.85rem;margin-top:-8px">L'image de chaque thématique s'affiche automatiquement sur tout événement de ce thème qui n'a pas sa propre photo. <strong>Ces thématiques sont exportées avec les données</strong> : cliquez sur « 📋 Copier le bloc de données » pour que vos modifications s'appliquent sur le site, sans jamais toucher au fichier coli-1-page.html.</p>
       <table class="themes-table">
         <thead><tr><th>Image</th><th>Identifiant</th><th>Libellé</th><th>Icône</th><th>Couleur</th><th></th></tr></thead>
         <tbody id="themes-body"></tbody>
@@ -365,10 +382,11 @@ table.themes-table input[type=color] { width:44px; height:32px; border:none; pad
 <div id="toast"></div>
 
 <!-- =====================================================================
-     Thématiques par défaut (identiques à celles de coli-1-page.html) : servent
-     à préremplir la liste déroulante des thématiques et l'onglet
-     Thématiques. Si vous changez une couleur/icône ici, reportez le
-     changement dans coli-1-page.html pour que la page publique soit à jour.
+     Thématiques par défaut (identiques à celles de coli-1-page.html) : ne
+     servent qu'à préremplir l'éditeur au premier chargement. Toute
+     modification faite dans l'onglet Thématiques est exportée avec le
+     bloc de données (COLI n°2) et s'applique sur le site sans jamais
+     modifier coli-1-page.html.
      ===================================================================== -->
 <script>
 const RDV_THEMES = [
@@ -1748,17 +1766,19 @@ a { color: inherit; }
 <script>
 /* =====================================================================
    RENDEZ-VOUS CITOYENS — LOGIQUE DE LA PAGE (COMPOSANT COLI N°1)
-   RDV_THEMES / RDV_STATS sont définis ici même (juste en dessous).
-   Les données événements NE SONT PAS dans ce fichier : elles doivent
-   se trouver dans un second composant COLI sur la même page AEM,
-   contenant exactement le fichier coli-2-donnees.html (voir ce fichier
-   pour les instructions de mise à jour via editeur.html).
+   RDV_THEMES / RDV_STATS ci-dessous sont des valeurs PAR DÉFAUT,
+   utilisées uniquement si le composant COLI n°2 ne fournit pas sa
+   propre configuration. Les données événements ET la configuration
+   (thématiques, chiffres clés) NE SONT PAS figées dans ce fichier :
+   elles doivent se trouver dans un second composant COLI sur la même
+   page AEM, contenant exactement le fichier coli-2-donnees.html (voir
+   ce fichier pour les instructions de mise à jour via editeur.html).
    ===================================================================== */
 
 (function () {
   "use strict";
 
-  const RDV_THEMES = [
+  let RDV_THEMES = [
     { id: "secourisme",         label: "Les gestes qui sauvent",      icone: "🚑", couleur: "#C81620", image: "images/secourisme.svg" },
     { id: "secourisme2",        label: "Les gestes qui sauvent",      icone: "🚑", couleur: "#C81620", image: "images/secourisme.svg" },
     { id: "cybersecurite",      label: "Cybersécurité",                icone: "🔒", couleur: "#005F60", image: "images/cybersecurite.svg" },
@@ -1775,14 +1795,19 @@ a { color: inherit; }
   ];
 
   // Laisser vide : les chiffres clés sont calculés automatiquement à partir
-  // des événements réels (voir renderStats() plus bas).
-  const RDV_STATS = {};
+  // des événements réels (voir renderStats() plus bas), sauf override fourni
+  // par le composant COLI n°2 (voir resolveRdvConfig()).
+  let RDV_STATS = {};
 
   const PAST_PAGE_SIZE = 5;
   let pastPage = 0;
   let RDV_EVENTS = [];
 
-  const themeById = Object.fromEntries(RDV_THEMES.map((t) => [t.id, t]));
+  let themeById = {};
+  function rebuildThemeIndex() {
+    themeById = Object.fromEntries(RDV_THEMES.map((t) => [t.id, t]));
+  }
+  rebuildThemeIndex();
 
   function getTheme(event) {
     return themeById[event.theme] || RDV_THEMES[RDV_THEMES.length - 1];
@@ -2081,9 +2106,36 @@ a { color: inherit; }
   }
 
   /* ---------------------------------------------------------------
+     Récupération de la configuration (thématiques + chiffres clés) :
+     comme pour les événements, elle vit dans le composant COLI n°2
+     (balise portant l'identifiant rdv-citoyens-config-data), pour que
+     l'éditeur puisse la mettre à jour sans jamais toucher ce fichier.
+     Absente ou invalide → on garde les valeurs par défaut ci-dessus.
+  --------------------------------------------------------------- */
+  function resolveRdvConfig() {
+    const el = document.getElementById("rdv-citoyens-config-data");
+    if (!el || !el.textContent.trim()) return {};
+    try {
+      return JSON.parse(el.textContent) || {};
+    } catch (e) {
+      console.error("Rendez-vous Citoyens : configuration invalide (#rdv-citoyens-config-data).");
+      return {};
+    }
+  }
+
+  /* ---------------------------------------------------------------
      Init
   --------------------------------------------------------------- */
   function init() {
+    const config = resolveRdvConfig();
+    if (Array.isArray(config.themes) && config.themes.length) {
+      RDV_THEMES = config.themes;
+      rebuildThemeIndex();
+    }
+    if (config.stats && typeof config.stats === "object") {
+      RDV_STATS = config.stats;
+    }
+
     RDV_EVENTS = parseEvenementsXML(resolveRdvXml());
     renderUpcoming();
     renderPast();
@@ -2249,6 +2301,55 @@ secourisme2
    *  coli-2-donnees.html / le composant COLI n°2 sur AEM — voir #rdv-citoyens-xml-data. */
   function buildDataBlock(xmlText) {
     return `<script type="application/xml" id="rdv-citoyens-xml-data">\n${xmlText}\n<\/script>`;
+  }
+
+  /** Enveloppe les thématiques et les chiffres clés (seulement ceux passés en
+   *  manuel, "auto" décoché) dans un second bloc — voir #rdv-citoyens-config-data.
+   *  C'est ce bloc que coli-1-page.html lit pour appliquer les thématiques et
+   *  les chiffres clés édités ici, sans jamais modifier le fichier lui-même. */
+  function buildConfigBlock(themes, stats, statsAuto) {
+    const manualStats = {};
+    Object.keys(statsAuto || {}).forEach((key) => {
+      if (!statsAuto[key] && stats[key] != null && stats[key] !== "") manualStats[key] = stats[key];
+    });
+    const config = { themes, stats: manualStats };
+    return `<script type="application/json" id="rdv-citoyens-config-data">\n${JSON.stringify(config, null, 2)}\n<\/script>`;
+  }
+
+  /** Bloc complet à coller dans le composant COLI n°2 : données événements
+   *  + configuration (thématiques, chiffres clés) — tout ce que l'éditeur
+   *  permet de modifier, en un seul bloc. */
+  function buildFullDataBlock(xmlText, themes, stats, statsAuto) {
+    return `${buildDataBlock(xmlText)}\n\n${buildConfigBlock(themes, stats, statsAuto)}`;
+  }
+
+  /** En-tête du fichier coli-2-donnees.html, repris tel quel lors d'un
+   *  enregistrement direct pour que le fichier reste lisible/documenté. */
+  const COLI2_HEADER_COMMENT = `<!-- =====================================================================
+     RENDEZ-VOUS CITOYENS — COMPOSANT COLI N°2 (données)
+     À coller intégralement dans le second composant COLI de la page
+     AEM (n'importe où sur la même page que coli-1-page.html).
+     Ce fichier ne s'affiche jamais : c'est un conteneur de données que
+     le script du composant n°1 lit au chargement de la page — les
+     événements (bloc XML), ET la configuration : thématiques et
+     chiffres clés (bloc JSON).
+
+     MISE À JOUR (par le service vie mutuelle) : ouvrez editeur.html,
+     modifiez/ajoutez/supprimez un événement OU une thématique OU un
+     chiffre clé, puis :
+       - soit vous avez lié ce fichier dans l'éditeur (bandeau « Fichiers
+         liés » en haut, sur Chrome/Edge) : bouton « Enregistrer
+         directement » et c'est fait, ce fichier est mis à jour tout seul ;
+       - soit cliquez sur « Copier le bloc de données » et remplacez tout
+         le contenu du composant COLI n°2 dans AEM par ce qui vient d'être
+         copié (les deux blocs à la fois).
+     coli-1-page.html n'a jamais besoin d'être modifié.
+     ===================================================================== -->`;
+
+  /** Contenu complet du fichier coli-2-donnees.html, prêt à écrire tel quel
+   *  sur disque (utilisé par l'enregistrement direct). */
+  function buildColi2FileContent() {
+    return `${COLI2_HEADER_COMMENT}\n${buildFullDataBlock(currentXml(), state.themes, state.stats, state.statsAuto)}\n`;
   }
 
   /** Lit un fichier image, le redimensionne (largeur max) et renvoie un data URL JPEG léger. */
@@ -2707,14 +2808,18 @@ secourisme2
   }
 
   document.getElementById("btn-copy-coli2").addEventListener("click", () => {
-    copyText(buildDataBlock(currentXml()), "Bloc de données copié — collez-le dans le composant COLI n°2 (coli-2-donnees.html)");
+    copyText(
+      buildFullDataBlock(currentXml(), state.themes, state.stats, state.statsAuto),
+      "Bloc de données copié — collez-le dans le composant COLI n°2 (coli-2-donnees.html)"
+    );
   });
 
-  /** Recompose une page complète (composant COLI n°1 + les événements
-   *  EN COURS D'ÉDITION ici) et l'ouvre dans un nouvel onglet, pour voir
-   *  le rendu réel avant de publier quoi que ce soit sur AEM. */
+  /** Recompose une page complète (composant COLI n°1 + les événements,
+   *  thématiques et chiffres clés EN COURS D'ÉDITION ici) et l'ouvre dans un
+   *  nouvel onglet, pour voir le rendu réel avant de publier quoi que ce
+   *  soit sur AEM. */
   document.getElementById("btn-preview").addEventListener("click", () => {
-    const dataBlock = buildDataBlock(currentXml());
+    const dataBlock = buildFullDataBlock(currentXml(), state.themes, state.stats, state.statsAuto);
     const previewHtml = COLI1_HTML.replace(
       "</body>\n</html>",
       `${dataBlock}\n</body>\n</html>`
@@ -2747,6 +2852,127 @@ secourisme2
     reader.readAsText(file);
     e.target.value = "";
   });
+
+  /* ---------------------------------------------------------------
+     Fichiers liés (File System Access API — Chrome / Edge uniquement) :
+     permet de choisir directement RDVCitoyens.xml et/ou coli-2-donnees.html
+     une fois à l'ouverture de l'éditeur, puis d'écrire les modifications
+     dessus en un clic, sans passer par le dossier Téléchargements et sans
+     accumuler des copies (RDVCitoyens (1).xml, (2).xml, ...).
+  --------------------------------------------------------------- */
+  const supportsFileSystemAccess = "showOpenFilePicker" in window;
+  let xmlFileHandle = null;
+  let coli2FileHandle = null;
+
+  /** Lit un fichier coli-2-donnees.html et en extrait les données événements
+   *  (XML) et la configuration (thématiques/chiffres clés), exactement comme
+   *  coli-1-page.html le fait au chargement de la page publique. */
+  function extractFromColi2Html(text) {
+    const doc = new DOMParser().parseFromString(text, "text/html");
+    const xmlEl = doc.getElementById("rdv-citoyens-xml-data");
+    const configEl = doc.getElementById("rdv-citoyens-config-data");
+    const xmlText = xmlEl ? xmlEl.textContent : null;
+    let config = null;
+    if (configEl && configEl.textContent.trim()) {
+      try { config = JSON.parse(configEl.textContent); } catch (e) { /* config absente ou invalide, tant pis */ }
+    }
+    return { xmlText, config };
+  }
+
+  function updateLinkFilesUI() {
+    const parts = [];
+    if (coli2FileHandle) parts.push(`<span class="link-chip">📄 ${escapeHtml(coli2FileHandle.name)}</span>`);
+    if (xmlFileHandle) parts.push(`<span class="link-chip">📄 ${escapeHtml(xmlFileHandle.name)}</span>`);
+    const statusText = document.getElementById("link-status-text");
+    if (parts.length) {
+      statusText.innerHTML = parts.join(" ") + " — prêts à être mis à jour en un clic.";
+    } else {
+      statusText.textContent = "Aucun fichier lié pour l'instant.";
+    }
+    document.getElementById("btn-save-direct").disabled = !coli2FileHandle && !xmlFileHandle;
+    document.getElementById("btn-link-coli2").textContent = coli2FileHandle ? "📄 Changer coli-2-donnees.html" : "📄 Lier coli-2-donnees.html";
+    document.getElementById("btn-link-xml").textContent = xmlFileHandle ? "📄 Changer RDVCitoyens.xml" : "📄 Lier RDVCitoyens.xml";
+  }
+
+  if (!supportsFileSystemAccess) {
+    document.getElementById("link-actions").innerHTML =
+      `<span class="link-note">Fonctionnalité disponible sur Chrome ou Edge uniquement — utilisez « Copier le bloc de données » / « Télécharger » ci-dessus.</span>`;
+    document.getElementById("link-status-text").textContent = "Aucun fichier lié dans ce navigateur.";
+  } else {
+    document.getElementById("btn-link-coli2").addEventListener("click", async () => {
+      try {
+        const [handle] = await window.showOpenFilePicker({
+          types: [{ description: "Composant COLI n°2", accept: { "text/html": [".html", ".htm"] } }]
+        });
+        const file = await handle.getFile();
+        const text = await file.text();
+        const { xmlText, config } = extractFromColi2Html(text);
+        if (!xmlText) {
+          alert("Ce fichier ne contient pas de données reconnues (balise rdv-citoyens-xml-data introuvable) — vérifiez que c'est bien un fichier coli-2-donnees.html.");
+          return;
+        }
+        coli2FileHandle = handle;
+        state.events = parseEvenementsXML(xmlText);
+        if (config && Array.isArray(config.themes) && config.themes.length) {
+          state.themes = config.themes;
+        }
+        if (config && config.stats && typeof config.stats === "object") {
+          Object.keys(state.statsAuto).forEach((key) => {
+            const hasManual = Object.prototype.hasOwnProperty.call(config.stats, key);
+            state.statsAuto[key] = !hasManual;
+            if (hasManual) state.stats[key] = config.stats[key];
+          });
+        }
+        renderAll(); saveDraft();
+        updateLinkFilesUI();
+        toast("coli-2-donnees.html lié : " + state.events.length + " événement(s) chargé(s)");
+      } catch (err) {
+        if (err && err.name === "AbortError") return;
+        alert("Impossible de lire ce fichier : " + err.message);
+      }
+    });
+
+    document.getElementById("btn-link-xml").addEventListener("click", async () => {
+      try {
+        const [handle] = await window.showOpenFilePicker({
+          types: [{ description: "Fichier XML", accept: { "text/xml": [".xml"] } }]
+        });
+        const file = await handle.getFile();
+        const text = await file.text();
+        const events = parseEvenementsXML(text);
+        xmlFileHandle = handle;
+        state.events = events;
+        renderAll(); saveDraft();
+        updateLinkFilesUI();
+        toast("RDVCitoyens.xml lié : " + state.events.length + " événement(s) chargé(s)");
+      } catch (err) {
+        if (err && err.name === "AbortError") return;
+        alert("Fichier XML invalide : " + err.message);
+      }
+    });
+
+    document.getElementById("btn-save-direct").addEventListener("click", async () => {
+      if (!coli2FileHandle && !xmlFileHandle) return;
+      const savedNames = [];
+      try {
+        if (coli2FileHandle) {
+          const writable = await coli2FileHandle.createWritable();
+          await writable.write(buildColi2FileContent());
+          await writable.close();
+          savedNames.push(coli2FileHandle.name);
+        }
+        if (xmlFileHandle) {
+          const writable = await xmlFileHandle.createWritable();
+          await writable.write(currentXml());
+          await writable.close();
+          savedNames.push(xmlFileHandle.name);
+        }
+        toast("Enregistré directement dans " + savedNames.join(" et "));
+      } catch (err) {
+        alert("Échec de l'enregistrement : " + err.message + " (le fichier a peut-être été déplacé, renommé ou verrouillé — reliez-le à nouveau si besoin)");
+      }
+    });
+  }
 
   /* ---------------------------------------------------------------
      Brouillon (localStorage)

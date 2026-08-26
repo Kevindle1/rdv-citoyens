@@ -675,17 +675,19 @@ a { color: inherit; }
 <script>
 /* =====================================================================
    RENDEZ-VOUS CITOYENS — LOGIQUE DE LA PAGE (COMPOSANT COLI N°1)
-   RDV_THEMES / RDV_STATS sont définis ici même (juste en dessous).
-   Les données événements NE SONT PAS dans ce fichier : elles doivent
-   se trouver dans un second composant COLI sur la même page AEM,
-   contenant exactement le fichier coli-2-donnees.html (voir ce fichier
-   pour les instructions de mise à jour via editeur.html).
+   RDV_THEMES / RDV_STATS ci-dessous sont des valeurs PAR DÉFAUT,
+   utilisées uniquement si le composant COLI n°2 ne fournit pas sa
+   propre configuration. Les données événements ET la configuration
+   (thématiques, chiffres clés) NE SONT PAS figées dans ce fichier :
+   elles doivent se trouver dans un second composant COLI sur la même
+   page AEM, contenant exactement le fichier coli-2-donnees.html (voir
+   ce fichier pour les instructions de mise à jour via editeur.html).
    ===================================================================== */
 
 (function () {
   "use strict";
 
-  const RDV_THEMES = [
+  let RDV_THEMES = [
     { id: "secourisme",         label: "Les gestes qui sauvent",      icone: "🚑", couleur: "#C81620", image: "images/secourisme.svg" },
     { id: "secourisme2",        label: "Les gestes qui sauvent",      icone: "🚑", couleur: "#C81620", image: "images/secourisme.svg" },
     { id: "cybersecurite",      label: "Cybersécurité",                icone: "🔒", couleur: "#005F60", image: "images/cybersecurite.svg" },
@@ -702,14 +704,19 @@ a { color: inherit; }
   ];
 
   // Laisser vide : les chiffres clés sont calculés automatiquement à partir
-  // des événements réels (voir renderStats() plus bas).
-  const RDV_STATS = {};
+  // des événements réels (voir renderStats() plus bas), sauf override fourni
+  // par le composant COLI n°2 (voir resolveRdvConfig()).
+  let RDV_STATS = {};
 
   const PAST_PAGE_SIZE = 5;
   let pastPage = 0;
   let RDV_EVENTS = [];
 
-  const themeById = Object.fromEntries(RDV_THEMES.map((t) => [t.id, t]));
+  let themeById = {};
+  function rebuildThemeIndex() {
+    themeById = Object.fromEntries(RDV_THEMES.map((t) => [t.id, t]));
+  }
+  rebuildThemeIndex();
 
   function getTheme(event) {
     return themeById[event.theme] || RDV_THEMES[RDV_THEMES.length - 1];
@@ -1008,9 +1015,36 @@ a { color: inherit; }
   }
 
   /* ---------------------------------------------------------------
+     Récupération de la configuration (thématiques + chiffres clés) :
+     comme pour les événements, elle vit dans le composant COLI n°2
+     (balise portant l'identifiant rdv-citoyens-config-data), pour que
+     l'éditeur puisse la mettre à jour sans jamais toucher ce fichier.
+     Absente ou invalide → on garde les valeurs par défaut ci-dessus.
+  --------------------------------------------------------------- */
+  function resolveRdvConfig() {
+    const el = document.getElementById("rdv-citoyens-config-data");
+    if (!el || !el.textContent.trim()) return {};
+    try {
+      return JSON.parse(el.textContent) || {};
+    } catch (e) {
+      console.error("Rendez-vous Citoyens : configuration invalide (#rdv-citoyens-config-data).");
+      return {};
+    }
+  }
+
+  /* ---------------------------------------------------------------
      Init
   --------------------------------------------------------------- */
   function init() {
+    const config = resolveRdvConfig();
+    if (Array.isArray(config.themes) && config.themes.length) {
+      RDV_THEMES = config.themes;
+      rebuildThemeIndex();
+    }
+    if (config.stats && typeof config.stats === "object") {
+      RDV_STATS = config.stats;
+    }
+
     RDV_EVENTS = parseEvenementsXML(resolveRdvXml());
     renderUpcoming();
     renderPast();
