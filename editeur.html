@@ -149,11 +149,13 @@ table.themes-table input[type=color] { width:44px; height:32px; border:none; pad
 
 .empty-state { text-align:center; color:var(--grey-text); padding:30px 0; font-size:.88rem; }
 .import-banner { background:#fff7e6; border:1px solid #f2d489; color:#7a5b00; padding:12px 16px; border-radius:10px; margin-bottom:18px; display:flex; justify-content:space-between; align-items:center; gap:14px; font-size:.85rem; }
-.link-banner { background:#eaf7f2; border:1px solid #9bd8c0; color:#0a4a34; padding:12px 16px; border-radius:10px; margin-bottom:18px; display:flex; justify-content:space-between; align-items:center; gap:14px; font-size:.85rem; flex-wrap:wrap; }
-.link-banner .link-status { display:flex; flex-direction:column; gap:2px; }
-.link-banner .link-actions { display:flex; gap:8px; flex-wrap:wrap; }
-.link-chip { display:inline-flex; align-items:center; gap:6px; background:#fff; border:1px solid #9bd8c0; border-radius:20px; padding:4px 12px; font-size:.78rem; font-weight:600; }
-.link-note { color:var(--grey-text); font-size:.8rem; }
+.folder-gate { display:flex; justify-content:center; padding:60px 16px; }
+.folder-gate-card { background:var(--card-bg); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); padding:40px 44px; max-width:520px; text-align:center; }
+.folder-gate-card h2 { margin:0 0 14px; font-size:1.3rem; }
+.folder-gate-card p { color:var(--grey-text); font-size:.92rem; line-height:1.5; margin:0 0 22px; }
+.folder-gate-card code { background:var(--blue-box); padding:2px 6px; border-radius:5px; font-size:.85rem; }
+.folder-gate-error { color:var(--danger) !important; font-weight:600; margin-top:16px !important; }
+.folder-badge { display:inline-flex; align-items:center; gap:6px; background:var(--blue-box); color:var(--navy); border-radius:20px; padding:5px 14px; font-size:.78rem; font-weight:600; }
 
 @media (max-width: 700px) {
   .form-grid, .form-grid.cols-3 { grid-template-columns: 1fr; }
@@ -167,13 +169,26 @@ table.themes-table input[type=color] { width:44px; height:32px; border:none; pad
   <div class="header-inner">
     <div class="header-title">
       <h1>Éditeur des Rendez-vous Citoyens</h1>
-      <p>Ajoutez, modifiez ou supprimez des événements, puis copiez le bloc de données à coller dans le composant COLI n°2 sur AEM (fichier coli-2-donnees.html).</p>
+      <p id="header-subtitle">Ouvrez le dossier du projet pour commencer.</p>
     </div>
-    <button class="btn btn-outline btn-small" id="btn-preview">👁️ Prévisualiser la page ↗</button>
+    <span class="folder-badge" id="folder-badge" style="display:none">📁 <span id="folder-badge-name"></span></span>
   </div>
 </header>
 
 <div class="container">
+
+  <!-- ÉCRAN D'OUVERTURE — première chose vue à l'ouverture de l'éditeur -->
+  <div id="folder-gate" class="folder-gate">
+    <div class="folder-gate-card">
+      <h2>📁 Ouvrir le dossier du projet</h2>
+      <p>Choisissez le dossier qui contient <code>RDVCitoyens.xml</code> et <code>coli-2-donnees.html</code> (le dossier du site). Une fois ouvert, le bouton « Enregistrer » écrira directement dans ces deux fichiers, au même endroit — rien à télécharger ni à déposer soi-même.</p>
+      <button class="btn btn-primary" id="btn-open-folder">Choisir le dossier</button>
+      <p class="folder-gate-error" id="folder-gate-error" style="display:none"></p>
+    </div>
+  </div>
+
+  <!-- APPLICATION — visible une fois le dossier ouvert -->
+  <div id="app-main" style="display:none">
 
   <div id="import-banner" class="import-banner" style="display:none">
     <span>Un brouillon enregistré dans ce navigateur a été retrouvé.</span>
@@ -183,26 +198,11 @@ table.themes-table input[type=color] { width:44px; height:32px; border:none; pad
     </span>
   </div>
 
-  <div id="link-banner" class="link-banner">
-    <div class="link-status" id="link-status">
-      <strong>🔗 Fichiers liés</strong>
-      <span id="link-status-text">Aucun fichier lié pour l'instant.</span>
-    </div>
-    <div class="link-actions" id="link-actions">
-      <button class="btn btn-outline btn-small" id="btn-link-coli2">📄 Lier coli-2-donnees.html</button>
-      <button class="btn btn-outline btn-small" id="btn-link-xml">📄 Lier RDVCitoyens.xml</button>
-      <button class="btn btn-primary btn-small" id="btn-save-direct" disabled>💾 Enregistrer directement</button>
-    </div>
-  </div>
-
   <div class="toolbar">
     <button class="btn btn-primary" id="btn-add-event">+ Nouvel événement</button>
-    <button class="btn btn-outline" id="btn-import">Importer un fichier XML</button>
-    <input type="file" id="file-import" accept=".xml,text/xml,application/xml" style="display:none">
     <div class="spacer"></div>
-    <button class="btn btn-outline" id="btn-copy">Copier le XML</button>
-    <button class="btn btn-soft" id="btn-download">⬇ Télécharger RDVCitoyens.xml</button>
-    <button class="btn btn-primary" id="btn-copy-coli2">📋 Copier le bloc de données (page / COLI n°2)</button>
+    <button class="btn btn-outline" id="btn-preview">👁️ Prévisualiser la page ↗</button>
+    <button class="btn btn-primary" id="btn-save">💾 Enregistrer</button>
   </div>
 
   <div class="tabs">
@@ -233,7 +233,7 @@ table.themes-table input[type=color] { width:44px; height:32px; border:none; pad
   <div class="tab-panel" id="tab-themes">
     <div class="panel">
       <h2>Thématiques disponibles</h2>
-      <p class="hint" style="color:var(--grey-text);font-size:.85rem;margin-top:-8px">L'image de chaque thématique s'affiche automatiquement sur tout événement de ce thème qui n'a pas sa propre photo. <strong>Ces thématiques sont exportées avec les données</strong> : cliquez sur « 📋 Copier le bloc de données » pour que vos modifications s'appliquent sur le site, sans jamais toucher au fichier coli-1-page.html.</p>
+      <p class="hint" style="color:var(--grey-text);font-size:.85rem;margin-top:-8px">L'image de chaque thématique s'affiche automatiquement sur tout événement de ce thème qui n'a pas sa propre photo. <strong>Ces thématiques sont enregistrées avec les données</strong> : cliquez sur « 💾 Enregistrer » pour que vos modifications s'appliquent sur le site, sans jamais toucher au fichier coli-1-page.html.</p>
       <table class="themes-table">
         <thead><tr><th>Image</th><th>Identifiant</th><th>Libellé</th><th>Icône</th><th>Couleur</th><th></th></tr></thead>
         <tbody id="themes-body"></tbody>
@@ -247,10 +247,13 @@ table.themes-table input[type=color] { width:44px; height:32px; border:none; pad
   <div class="tab-panel" id="tab-export">
     <div class="panel">
       <h2>Aperçu du fichier <code>RDVCitoyens.xml</code></h2>
-      <p style="color:var(--grey-text);font-size:.85rem;margin-top:-8px">Ce texte se met à jour automatiquement et respecte le format XML d'origine. <strong>Pour mettre à jour le site (AEM)</strong>, utilisez le bouton « 📋 Copier le bloc de données » en haut : il enveloppe ce XML dans la balise attendue, prête à remplacer intégralement le contenu du composant COLI n°2 (fichier <code>coli-2-donnees.html</code>). Les boutons « Copier le XML » / « Télécharger » servent à garder ou partager le fichier <code>RDVCitoyens.xml</code> lui-même, séparément.</p>
+      <p style="color:var(--grey-text);font-size:.85rem;margin-top:-8px">Ce texte se met à jour automatiquement et respecte le format XML d'origine. Cliquez sur « 💾 Enregistrer » en haut pour écrire ce contenu dans <code>RDVCitoyens.xml</code> et la configuration complète dans <code>coli-2-donnees.html</code>, directement dans le dossier ouvert.</p>
       <pre class="code-preview" id="code-preview"></pre>
     </div>
   </div>
+
+  </div>
+  <!-- fin #app-main -->
 
 </div>
 
@@ -2772,7 +2775,7 @@ secourisme2
   });
 
   /* ---------------------------------------------------------------
-     Export / téléchargement / copie / import
+     Export (utilisé par l'aperçu et par l'enregistrement)
   --------------------------------------------------------------- */
   function currentXml() { return buildEvenementsXML(state.events); }
 
@@ -2780,44 +2783,9 @@ secourisme2
     document.getElementById("code-preview").textContent = currentXml();
   }
 
-  function downloadBlob(content, filename, mime) {
-    const blob = new Blob([content], { type: mime });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url; a.download = filename;
-    document.body.appendChild(a); a.click(); a.remove();
-    URL.revokeObjectURL(url);
-  }
-
-  document.getElementById("btn-download").addEventListener("click", () => {
-    downloadBlob(currentXml(), "RDVCitoyens.xml", "application/xml");
-    toast("Fichier RDVCitoyens.xml téléchargé");
-  });
-
-  async function copyText(text, okMsg) {
-    try {
-      await navigator.clipboard.writeText(text);
-      toast(okMsg);
-    } catch (e) {
-      const ta = document.createElement("textarea");
-      ta.value = text; document.body.appendChild(ta); ta.select();
-      try { document.execCommand("copy"); toast(okMsg); }
-      catch (e2) { toast("Impossible de copier automatiquement — utilisez l'aperçu"); }
-      ta.remove();
-    }
-  }
-
-  document.getElementById("btn-copy-coli2").addEventListener("click", () => {
-    copyText(
-      buildFullDataBlock(currentXml(), state.themes, state.stats, state.statsAuto),
-      "Bloc de données copié — collez-le dans le composant COLI n°2 (coli-2-donnees.html)"
-    );
-  });
-
   /** Recompose une page complète (composant COLI n°1 + les événements,
    *  thématiques et chiffres clés EN COURS D'ÉDITION ici) et l'ouvre dans un
-   *  nouvel onglet, pour voir le rendu réel avant de publier quoi que ce
-   *  soit sur AEM. */
+   *  nouvel onglet, pour voir le rendu réel avant d'enregistrer. */
   document.getElementById("btn-preview").addEventListener("click", () => {
     const dataBlock = buildFullDataBlock(currentXml(), state.themes, state.stats, state.statsAuto);
     const previewHtml = COLI1_HTML.replace(
@@ -2830,152 +2798,121 @@ secourisme2
     setTimeout(() => URL.revokeObjectURL(url), 30000);
   });
 
-  document.getElementById("btn-copy").addEventListener("click", () => {
-    copyText(currentXml(), "XML copié dans le presse-papiers");
-  });
-
-  document.getElementById("btn-import").addEventListener("click", () => document.getElementById("file-import").click());
-  document.getElementById("file-import").addEventListener("change", (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      try {
-        const events = parseEvenementsXML(String(reader.result));
-        state.events = events;
-        renderAll(); saveDraft();
-        toast("Import réussi : " + state.events.length + " événement(s)");
-      } catch (err) {
-        alert("Fichier XML invalide : " + err.message);
-      }
-    };
-    reader.readAsText(file);
-    e.target.value = "";
-  });
-
   /* ---------------------------------------------------------------
-     Fichiers liés (File System Access API — Chrome / Edge uniquement) :
-     permet de choisir directement RDVCitoyens.xml et/ou coli-2-donnees.html
-     une fois à l'ouverture de l'éditeur, puis d'écrire les modifications
-     dessus en un clic, sans passer par le dossier Téléchargements et sans
-     accumuler des copies (RDVCitoyens (1).xml, (2).xml, ...).
+     Dossier du projet (File System Access API — Chrome / Edge) :
+     à l'ouverture, on choisit UNE FOIS le dossier qui contient
+     RDVCitoyens.xml et coli-2-donnees.html. Le bouton « Enregistrer »
+     réécrit ensuite directement ces deux fichiers, au même endroit —
+     rien à télécharger, rien à copier-coller, pas de copies qui
+     s'accumulent.
   --------------------------------------------------------------- */
-  const supportsFileSystemAccess = "showOpenFilePicker" in window;
+  const supportsFileSystemAccess = "showDirectoryPicker" in window;
+  let projectDirHandle = null;
   let xmlFileHandle = null;
   let coli2FileHandle = null;
 
-  /** Lit un fichier coli-2-donnees.html et en extrait les données événements
-   *  (XML) et la configuration (thématiques/chiffres clés), exactement comme
-   *  coli-1-page.html le fait au chargement de la page publique. */
-  function extractFromColi2Html(text) {
+  /** Lit un fichier coli-2-donnees.html et en extrait la configuration
+   *  (thématiques/chiffres clés) — les événements viennent, eux, toujours
+   *  de RDVCitoyens.xml (la donnée de référence pour les envois e-mail/SMS). */
+  function extractConfigFromColi2Html(text) {
     const doc = new DOMParser().parseFromString(text, "text/html");
-    const xmlEl = doc.getElementById("rdv-citoyens-xml-data");
     const configEl = doc.getElementById("rdv-citoyens-config-data");
-    const xmlText = xmlEl ? xmlEl.textContent : null;
-    let config = null;
-    if (configEl && configEl.textContent.trim()) {
-      try { config = JSON.parse(configEl.textContent); } catch (e) { /* config absente ou invalide, tant pis */ }
-    }
-    return { xmlText, config };
+    if (!configEl || !configEl.textContent.trim()) return null;
+    try { return JSON.parse(configEl.textContent); } catch (e) { return null; }
   }
 
-  function updateLinkFilesUI() {
-    const parts = [];
-    if (coli2FileHandle) parts.push(`<span class="link-chip">📄 ${escapeHtml(coli2FileHandle.name)}</span>`);
-    if (xmlFileHandle) parts.push(`<span class="link-chip">📄 ${escapeHtml(xmlFileHandle.name)}</span>`);
-    const statusText = document.getElementById("link-status-text");
-    if (parts.length) {
-      statusText.innerHTML = parts.join(" ") + " — prêts à être mis à jour en un clic.";
-    } else {
-      statusText.textContent = "Aucun fichier lié pour l'instant.";
+  function showFolderGateError(message) {
+    const el = document.getElementById("folder-gate-error");
+    el.textContent = message;
+    el.style.display = "block";
+  }
+
+  async function openProjectFolder() {
+    document.getElementById("folder-gate-error").style.display = "none";
+    let handle;
+    try {
+      handle = await window.showDirectoryPicker();
+    } catch (err) {
+      if (err && err.name === "AbortError") return;
+      showFolderGateError("Impossible d'ouvrir ce dossier : " + err.message);
+      return;
     }
-    document.getElementById("btn-save-direct").disabled = !coli2FileHandle && !xmlFileHandle;
-    document.getElementById("btn-link-coli2").textContent = coli2FileHandle ? "📄 Changer coli-2-donnees.html" : "📄 Lier coli-2-donnees.html";
-    document.getElementById("btn-link-xml").textContent = xmlFileHandle ? "📄 Changer RDVCitoyens.xml" : "📄 Lier RDVCitoyens.xml";
+
+    let xmlText;
+    try {
+      xmlFileHandle = await handle.getFileHandle("RDVCitoyens.xml");
+      xmlText = await (await xmlFileHandle.getFile()).text();
+    } catch (err) {
+      showFolderGateError("« RDVCitoyens.xml » est introuvable dans ce dossier — choisissez le dossier du site qui le contient.");
+      return;
+    }
+
+    let coli2Text;
+    try {
+      coli2FileHandle = await handle.getFileHandle("coli-2-donnees.html");
+      coli2Text = await (await coli2FileHandle.getFile()).text();
+    } catch (err) {
+      showFolderGateError("« coli-2-donnees.html » est introuvable dans ce dossier — choisissez le dossier du site qui le contient.");
+      return;
+    }
+
+    projectDirHandle = handle;
+    try {
+      state.events = parseEvenementsXML(xmlText);
+    } catch (err) {
+      showFolderGateError("« RDVCitoyens.xml » n'a pas pu être lu : " + err.message);
+      return;
+    }
+    const config = extractConfigFromColi2Html(coli2Text);
+    if (config && Array.isArray(config.themes) && config.themes.length) {
+      state.themes = config.themes;
+    }
+    if (config && config.stats && typeof config.stats === "object") {
+      Object.keys(state.statsAuto).forEach((key) => {
+        const hasManual = Object.prototype.hasOwnProperty.call(config.stats, key);
+        state.statsAuto[key] = !hasManual;
+        if (hasManual) state.stats[key] = config.stats[key];
+      });
+    }
+
+    document.getElementById("folder-gate").style.display = "none";
+    document.getElementById("app-main").style.display = "";
+    document.getElementById("header-subtitle").textContent =
+      "Modifications enregistrées directement dans RDVCitoyens.xml et coli-2-donnees.html.";
+    const badge = document.getElementById("folder-badge");
+    badge.style.display = "inline-flex";
+    document.getElementById("folder-badge-name").textContent = handle.name;
+
+    renderAll();
+    tryLoadDraft(); // propose un brouillon non enregistré, s'il en existe un, AVANT d'écraser localStorage
+    toast("Dossier ouvert : " + state.events.length + " événement(s) chargé(s)");
   }
 
   if (!supportsFileSystemAccess) {
-    document.getElementById("link-actions").innerHTML =
-      `<span class="link-note">Fonctionnalité disponible sur Chrome ou Edge uniquement — utilisez « Copier le bloc de données » / « Télécharger » ci-dessus.</span>`;
-    document.getElementById("link-status-text").textContent = "Aucun fichier lié dans ce navigateur.";
+    document.getElementById("btn-open-folder").disabled = true;
+    showFolderGateError("Cette fonctionnalité nécessite Chrome ou Edge — ouvrez l'éditeur avec l'un de ces navigateurs.");
   } else {
-    document.getElementById("btn-link-coli2").addEventListener("click", async () => {
-      try {
-        const [handle] = await window.showOpenFilePicker({
-          types: [{ description: "Composant COLI n°2", accept: { "text/html": [".html", ".htm"] } }]
-        });
-        const file = await handle.getFile();
-        const text = await file.text();
-        const { xmlText, config } = extractFromColi2Html(text);
-        if (!xmlText) {
-          alert("Ce fichier ne contient pas de données reconnues (balise rdv-citoyens-xml-data introuvable) — vérifiez que c'est bien un fichier coli-2-donnees.html.");
-          return;
-        }
-        coli2FileHandle = handle;
-        state.events = parseEvenementsXML(xmlText);
-        if (config && Array.isArray(config.themes) && config.themes.length) {
-          state.themes = config.themes;
-        }
-        if (config && config.stats && typeof config.stats === "object") {
-          Object.keys(state.statsAuto).forEach((key) => {
-            const hasManual = Object.prototype.hasOwnProperty.call(config.stats, key);
-            state.statsAuto[key] = !hasManual;
-            if (hasManual) state.stats[key] = config.stats[key];
-          });
-        }
-        renderAll(); saveDraft();
-        updateLinkFilesUI();
-        toast("coli-2-donnees.html lié : " + state.events.length + " événement(s) chargé(s)");
-      } catch (err) {
-        if (err && err.name === "AbortError") return;
-        alert("Impossible de lire ce fichier : " + err.message);
-      }
-    });
-
-    document.getElementById("btn-link-xml").addEventListener("click", async () => {
-      try {
-        const [handle] = await window.showOpenFilePicker({
-          types: [{ description: "Fichier XML", accept: { "text/xml": [".xml"] } }]
-        });
-        const file = await handle.getFile();
-        const text = await file.text();
-        const events = parseEvenementsXML(text);
-        xmlFileHandle = handle;
-        state.events = events;
-        renderAll(); saveDraft();
-        updateLinkFilesUI();
-        toast("RDVCitoyens.xml lié : " + state.events.length + " événement(s) chargé(s)");
-      } catch (err) {
-        if (err && err.name === "AbortError") return;
-        alert("Fichier XML invalide : " + err.message);
-      }
-    });
-
-    document.getElementById("btn-save-direct").addEventListener("click", async () => {
-      if (!coli2FileHandle && !xmlFileHandle) return;
-      const savedNames = [];
-      try {
-        if (coli2FileHandle) {
-          const writable = await coli2FileHandle.createWritable();
-          await writable.write(buildColi2FileContent());
-          await writable.close();
-          savedNames.push(coli2FileHandle.name);
-        }
-        if (xmlFileHandle) {
-          const writable = await xmlFileHandle.createWritable();
-          await writable.write(currentXml());
-          await writable.close();
-          savedNames.push(xmlFileHandle.name);
-        }
-        toast("Enregistré directement dans " + savedNames.join(" et "));
-      } catch (err) {
-        alert("Échec de l'enregistrement : " + err.message + " (le fichier a peut-être été déplacé, renommé ou verrouillé — reliez-le à nouveau si besoin)");
-      }
-    });
+    document.getElementById("btn-open-folder").addEventListener("click", openProjectFolder);
   }
 
+  document.getElementById("btn-save").addEventListener("click", async () => {
+    try {
+      const xw = await xmlFileHandle.createWritable();
+      await xw.write(currentXml());
+      await xw.close();
+      const cw = await coli2FileHandle.createWritable();
+      await cw.write(buildColi2FileContent());
+      await cw.close();
+      saveDraft();
+      toast("✅ Enregistré : RDVCitoyens.xml et coli-2-donnees.html mis à jour");
+    } catch (err) {
+      alert("Échec de l'enregistrement : " + err.message + " (le fichier a peut-être été déplacé, renommé ou verrouillé — réouvrez le dossier si besoin)");
+    }
+  });
+
   /* ---------------------------------------------------------------
-     Brouillon (localStorage)
+     Brouillon (localStorage) — filet de sécurité en cas de fermeture
+     accidentelle avant d'avoir cliqué sur Enregistrer.
   --------------------------------------------------------------- */
   function tryLoadDraft() {
     let raw;
@@ -3003,9 +2940,6 @@ secourisme2
     renderThemesTab();
     renderExportPreview();
   }
-
-  renderAll();
-  tryLoadDraft();
 })();
 </script>
 </body>
